@@ -1,3 +1,5 @@
 # db-workspace
 
-2022 database project
+Settings
+
+$ npm install axios
