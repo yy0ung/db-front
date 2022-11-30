@@ -20,7 +20,7 @@ function Users() {
         setUsers(null);
         setLoading(true);
         const response = await axios.get(
-          '/AUTHOR'
+          '/attr/dic'
         );
         setUsers(response.data);
         console.log(response.data) 
@@ -40,7 +40,7 @@ function Users() {
     <ul>
       {users.map(user => (
         <li key={user.id}>
-          {user.name} / {user.profile}
+          {user.attr} 
         </li>
       ))}
     </ul>
