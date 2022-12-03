@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
+
 function GetAttrDic() {
   const [attr, setAttr] = useState(null);
   useEffect(() => {
@@ -35,62 +36,144 @@ function GetKeyDic(){
   return key
 }
 
-function UserAddAttr(){
-  
-  return "aa"
-}
+
 
 
 function App() {
   const [showA, setshowA] = useState(false);
   const [showK, setshowK] = useState(false);
+  const [aName, setAName] = useState(null);
   //const [newAttr, setNewAttr] = useState(null);
 
   let content = null  
   let attr = GetAttrDic()
   let key = GetKeyDic()
 
-  const onSubmitHandler = async (e) =>{
-    const item = e.target.text.value
-    await axios.post('/post/attr/dic', { id:null, attr: item })
-    console.log('fin')
+  function GetScanTable() {
+    const [tables, setTables] = useState(null);
+    
+    useEffect(() => {
+      const fetchTables = async () => {
+        try {
+          
+          setTables(null);
+          const response = await axios.get(
+            '/scan'
+          );
+          setTables(response.data);
+        } catch (e) {
+          console.log(e)
+        }
+       
+      };
+  
+      fetchTables();
+    }, []);
+  
+    if (!tables) return null;
+    return (
+      <table>
+        <tr>
+          <th>속성명</th>
+          <th>속성타입</th>
+          <th>대표속성</th>
+          <th>대표결합키</th>
+        </tr>
+        {tables.map(t =>
+          <tr key={t.attr_name}>
+            <td>{t.attr_name}</td>
+            <td>{t.attr_type}</td>
+            
+            <td onClick={()=>{
+              setshowA(true);
+              setshowK(false);
+              setAName(t.attr_name)
+            }}>{t.head_attr}</td>
 
+            <td onClick={()=>{
+              setshowA(false);
+              setshowK(true);
+              setAName(t.attr_name)
+            }}>{t.head_key}</td>
+          </tr>
+          )}
+        
+      </table>
+    
+    );
+  }
+
+  //scan table 대표속성값 업데이트
+  async function putAttrToScanTable(props){
+    const item = props
+    const name = aName
+    console.log(aName)
+    await axios.put('/put/attr', { attr : item, name : name})
+    window.location.replace('/')
+  }
+
+  //scan table 대표결합키값 업데이트
+  async function putKeyToScanTable(props){
+    const item = props
+    const name = aName
+    console.log(aName)
+    await axios.put('/put/key', { key : item, name : name})
+    window.location.replace('/')
   }
   
+  //attr dic에 사용자가 추가한 대표속성값 추가 + scan table에 해당 값으로 업데이트
+  const onSubmitAttrHandler = async (e) =>{
+    const item = e.target.text.value
+    await axios.post('/post/attr/dic', { id:null, attr: item })
+    putAttrToScanTable(item)
+    console.log('fin')
+  }
+
+  //key dic에 사용자가 추가한 대표속성값 추가 + scan table에 해당 값으로 업데이트
+  const onSubmitKeyHandler = async (e) =>{
+    const item = e.target.text.value
+    await axios.post('/post/key/dic', { id:null, key: item })
+    putKeyToScanTable(item)
+    console.log('fin')
+  }
+
 
   //click 했을 때 attribute dic 보여주기
-  if(showA==true){
+  if(showA===true){
     if(attr===null){
       content=null
     }else{
       content = <ul>
       {attr.map(d => (
-        <li key={d.attr} onClick={() => console.log(d.attr)}>
+        <li key={d.attr} onClick={() => putAttrToScanTable(d.attr)}>
           {d.attr} 
         </li>
       ))}
-      <li onClick={() => console.log(UserAddAttr())}>사용자 추가</li>
-      <li><form onSubmit={onSubmitHandler}>
+      <li>사용자 추가  <form onSubmit={onSubmitAttrHandler}>
         <input name="text"/>
-        <input type="submit" value="추가"/>
+        <input type="submit" value="속성 추가"/>
       </form></li>
+      
     </ul>
   }
   }
 
   //click 했을 때 key dic 보여주기
-  if(showK==true){
+  if(showK===true){
     if(key===null){
       content=null
     }else{
       content = <ul>
       {key.map(d => (
-        <li key={d.key} onClick={() => console.log(d.key_attr)}>
+        <li key={d.key_attr} onClick={() => putKeyToScanTable(d.key_attr)}>
           {d.key_attr} 
         </li>
         
       ))}
-      <li>사용자 추가</li>
+      <li>사용자 추가  <form onSubmit={onSubmitKeyHandler}>
+        <input name="text"/>
+        <input type="submit" value="키 추가"/>
+      </form></li>
     </ul>
   }
   }
@@ -98,16 +181,16 @@ function App() {
   return (
     <div className="App">
       db-workspace
-      <p onClick={()=>{
-        setshowA(true);
-        setshowK(false);
-      }}>속성사전 읽어오기</p>
-      <p onClick={()=>{
-        setshowK(true);
-        setshowA(false);
-      }}>결합키사전 읽어오기</p>
+      <GetScanTable></GetScanTable>
+      <div>
+        <p>scan table</p>
+      </div>
+    
       {content}
+      
+
     </div>
+    
   );
 }
 
