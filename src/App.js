@@ -42,6 +42,7 @@ function GetKeyDic(){
 function App() {
   const [showA, setshowA] = useState(false);
   const [showK, setshowK] = useState(false);
+  const [showT, setShowT] = useState(false);
   const [aName, setAName] = useState(null);
   //const [newAttr, setNewAttr] = useState(null);
 
@@ -82,17 +83,24 @@ function App() {
         {tables.map(t =>
           <tr key={t.attr_name}>
             <td>{t.attr_name}</td>
-            <td>{t.attr_type}</td>
+            <td onClick={()=>{
+              setshowA(false);
+              setshowK(false);
+              setShowT(true);
+              setAName(t.attr_name)
+            }}>{t.attr_type}</td>
             
             <td onClick={()=>{
               setshowA(true);
               setshowK(false);
+              setShowT(false);
               setAName(t.attr_name)
             }}>{t.head_attr}</td>
 
             <td onClick={()=>{
               setshowA(false);
               setshowK(true);
+              setShowT(false);
               setAName(t.attr_name)
             }}>{t.head_key}</td>
           </tr>
@@ -137,6 +145,13 @@ function App() {
     console.log('fin')
   }
 
+  //scan table의 attr_type 값 업데이트
+  const onSubmitEditTypeHandler = async (e) =>{
+    const item = e.target.text.value
+    await axios.put('/edit/type', { type : item, name : aName })
+    console.log('fin')
+  }
+
 
   //click 했을 때 attribute dic 보여주기
   if(showA===true){
@@ -176,6 +191,14 @@ function App() {
       </form></li>
     </ul>
   }
+  }
+
+  // click 했을 때 edit type
+  if(showT===true){
+    content = <form onSubmit={onSubmitEditTypeHandler}>
+    <input name="text"/>
+    <input type="submit" value="속성편집"/>
+  </form>
   }
   
   return (
