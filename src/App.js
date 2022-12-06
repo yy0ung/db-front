@@ -44,11 +44,13 @@ function App() {
   const [showK, setshowK] = useState(false);
   const [showT, setShowT] = useState(false);
   const [aName, setAName] = useState(null);
+  const [login, setLogin] = useState(false);
   //const [newAttr, setNewAttr] = useState(null);
 
   let content = null  
   let attr = GetAttrDic()
   let key = GetKeyDic()
+  let loginOut = null
 
   function GetScanTable() {
     const [tables, setTables] = useState(null);
@@ -70,6 +72,12 @@ function App() {
   
       fetchTables();
     }, []);
+
+    async function deleteAttrToScanTable(props){
+      const item = props
+      await axios.delete('/delete/attr', {data: {name : item}})
+      window.location.replace('/')
+    }
   
     if (!tables) return null;
     return (
@@ -82,7 +90,9 @@ function App() {
         </tr>
         {tables.map(t =>
           <tr key={t.attr_name}>
-            <td>{t.attr_name}</td>
+            <td onClick={()=>
+              deleteAttrToScanTable(t.attr_name)
+            }>{t.attr_name}</td>
             <td onClick={()=>{
               setshowA(false);
               setshowK(false);
@@ -152,6 +162,24 @@ function App() {
     console.log('fin')
   }
 
+  //db connect
+  const onSubmitLoginHandler = async(e) =>{
+    e.preventDefault();
+    const host = e.target.host.value
+    const port = e.target.port.value
+    const db = e.target.db.value
+    const user = e.target.user.value
+    const pw = e.target.pw.value
+    const response = await axios.post('/db/connect', 
+    { host : host, port : port, db : db, user : user, pw : pw })
+    if(response.data){
+      setLogin(true)
+    }else{
+      setLogin(false)
+    }
+
+  }
+
 
   //click 했을 때 attribute dic 보여주기
   if(showA===true){
@@ -200,10 +228,26 @@ function App() {
     <input type="submit" value="속성편집"/>
   </form>
   }
+
+  //db 연결 상태 확인 login
+  if(login){
+    loginOut = <h4>디비 연결된 상태</h4>
+  }else{
+    loginOut = <h4>디비 연결 안 된 상태</h4>
+  }
   
   return (
     <div className="App">
       db-workspace
+      {loginOut}
+      <form onSubmit={onSubmitLoginHandler}>
+        HOST <input name = "host"/>
+        PORT <input name="port"/>
+        DB <input name="db"/>
+        USER <input name="user"/>
+        PW <input name="pw"/>
+        <input type="submit" value="Connect"/>
+      </form>
       <GetScanTable></GetScanTable>
       <div>
         <p>scan table</p>
