@@ -45,12 +45,15 @@ function App() {
   const [showT, setShowT] = useState(false);
   const [aName, setAName] = useState(null);
   const [login, setLogin] = useState(false);
+  //search demo
+  const [searchT, setSearchT] = useState(null);
   //const [newAttr, setNewAttr] = useState(null);
 
   let content = null  
   let attr = GetAttrDic()
   let key = GetKeyDic()
   let loginOut = null
+  let searchResult=[]
 
   function GetScanTable() {
     const [tables, setTables] = useState(null);
@@ -180,6 +183,23 @@ function App() {
 
   }
 
+  //search demo (속성 이름으로 검색)
+  async function onSubmitSearchTable(e){
+    setSearchT(null)
+    e.preventDefault()
+    const keyword = e.target.attr.value
+    const response = await axios.get('/scan/done')
+    let temp = []
+    const data = response.data
+    data.map(d=>(temp.push(d.scan_table)))
+    for(let t in temp){
+      axios.post('/search/table', {keyword : keyword})
+      //{searchTable: temp[t], column: "attr_name", keyword : keyword}
+        .then((res)=> console.log(res.data[t]) )
+    }
+
+    
+  }
 
   //click 했을 때 attribute dic 보여주기
   if(showA===true){
@@ -254,6 +274,15 @@ function App() {
       </div>
     
       {content}
+
+      <div>
+        테이블 선택
+        <form onSubmit={onSubmitSearchTable}>
+          <input name="attr"/>
+          <input type="submit" value="검색"/>  
+        </form>    
+        
+      </div>
       
 
     </div>
