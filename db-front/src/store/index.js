@@ -4,7 +4,13 @@ import persist from './persist.js'
 
 export default createStore({
   state: {
-    
+    dbConnect:{
+      host: "-",
+      port : "-",
+      db : "-",
+      user : "-",
+      pw : "-"
+    }
   },
   mutations: {
 

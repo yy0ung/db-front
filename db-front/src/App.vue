@@ -4,9 +4,8 @@
       <div id="nav">
         <div class="dbInfo">
           <p>DB 정보</p>
-          <p>HOST : {{this.host}}</p>
-          <p>PORT : {{this.port}}</p>
-          <p>DATABASE : {{this.db}}</p>
+          <p>HOST : {{this.$store.state.dbConnect.host}} PORT : {{this.$store.state.dbConnect.port}}</p>
+          <p>DATABASE : {{this.$store.state.dbConnect.db}}</p>
         </div>
         <div class="navTitle">
           <router-link to="/connect"><span class="navItem" @click="indexC(0)" :class="{active: this.$store.state.persist.indexColor>=0}">DB 연결관리</span></router-link>
@@ -28,33 +27,33 @@
 </template>
 
 <script>
-//import axios from "axios";
+import axios from "axios";
 export default {
   name: 'App',
   data() {
     return {
-      host : "-",
-      port : "-",
-      db : "-"
+      host : "",
+      port : "",
+      db : ""
     }
   },
   mounted() {
-     //this.getData()
+     
   },
   
   methods: {
     indexC(num){
       this.$store.state.persist.indexColor = num
-    }
-    // async getData() {
+    },
+    async getData() {
       
-    //   try {
-    //     const result = await axios.get("/attr/dic");
-    //     console.log(result);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
+      try {
+        const result = await axios.get("/attr/dic");
+        console.log(result);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 
   }
@@ -85,7 +84,7 @@ export default {
   flex: 1;
   font-size: 1.2rem;
   font-weight: 700;
-  
+  margin-top: 50px;
 }
 #nav .navTitle span{
   margin-top: 0;

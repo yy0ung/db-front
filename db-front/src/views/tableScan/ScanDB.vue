@@ -1,6 +1,8 @@
 <template>
   <div id="scanDB">
-    <h2>스캔</h2>
+    <p class="blackTitle">테이블 속성 도메인 스캔</p>
+    <p>대상 테이블 선택</p>
+    <button @click="nextTest">다음</button>
   </div>  
 </template>
 
@@ -12,6 +14,9 @@ export default {
   methods: {
     setIndex(){
       this.$store.state.persist.indexColor = 1
+    },
+    nextTest(){
+      this.$router.push('/scanattr')
     }
   },
 }

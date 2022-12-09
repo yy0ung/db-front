@@ -1,7 +1,8 @@
 <template>
-  <div id="connectDB">
-    <h2>연결</h2>
-
+  <div id="uploadFile">
+    <p class="blackTitle">DB 연결 관리</p>
+    <input type="file">
+    <button>CSV 업로드</button>
   </div>  
 </template>
 
@@ -13,7 +14,7 @@ export default {
   methods: {
     setIndex(){
       this.$store.state.persist.indexColor = 0
-    }
+    },
   },
 }
 </script>
