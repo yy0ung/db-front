@@ -1,6 +1,7 @@
 <template>
-  <div id="joinSingle">
-    <h2>단일 결합</h2>
+  <div id="joinMulti">
+    <p class="blackTitle">다중 결합</p>
+    <p>다중 결합 결과</p>
   </div>  
 </template>
 
@@ -11,7 +12,7 @@ export default {
   },
   methods: {
     setIndex(){
-      this.$store.state.persist.indexColor = 3
+      this.$store.state.persist.indexColor = 4
     }
   },
 }

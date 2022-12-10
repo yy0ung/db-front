@@ -11,8 +11,8 @@
           <router-link to="/connect"><span class="navItem" @click="indexC(0)" :class="{active: this.$store.state.persist.indexColor>=0}">DB 연결관리</span></router-link>
           <router-link to="/scan"><span class="navItem" @click="indexC(1)" :class="{active: this.$store.state.persist.indexColor>=1}"><span class="navArrow">></span>테이블 속성 도메인 스캔</span></router-link>
           <router-link to="/edit"><span class="navItem" @click="indexC(2)" :class="{active: this.$store.state.persist.indexColor>=2}"><span class="navArrow">></span>테이블 속성 편집</span></router-link>
-          <router-link to="/joinsingle"><span class="navItem" @click="indexC(3)" :class="{active: this.$store.state.persist.indexColor>=3}"><span class="navArrow">></span>단일 결합</span></router-link>
-          <router-link to="/joinmulti"><span class="navItem" @click="indexC(4)" :class="{active: this.$store.state.persist.indexColor>=4}"><span class="navArrow">></span>다중 결합</span></router-link>
+          <router-link to="/sjoinssearch"><span class="navItem" @click="indexC(3)" :class="{active: this.$store.state.persist.indexColor>=3}"><span class="navArrow">></span>단일 결합</span></router-link>
+          <router-link to="/mjoinssearch"><span class="navItem" @click="indexC(4)" :class="{active: this.$store.state.persist.indexColor>=4}"><span class="navArrow">></span>다중 결합</span></router-link>
           <router-link to="/showresult"><span class="navItem" @click="indexC(5)" :class="{active: this.$store.state.persist.indexColor>=5}"><span class="navArrow">></span>결과 조회</span></router-link>
           
         </div>

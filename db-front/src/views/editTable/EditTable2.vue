@@ -1,9 +1,10 @@
 <template>
-  <div id="scanDB2">
+  <div id="editTable2">
     <div class="modal-back" v-if="showModal==true">
       <div class="attr-modal" v-if="showModal==true">
-      <p v-if="modalType==0">{{modalTitle.attr_name}} 대표 속성 선택하기</p>
-      <p v-if="modalType==1">{{modalTitle.attr_name}} 대표 결합키 선택하기</p>
+      <p v-if="modalType==0">{{modalTitle.attr_name}} 대표 속성 편집하기</p>
+      <p v-if="modalType==1">{{modalTitle.attr_name}} 대표 결합키 편집하기</p>
+      <p v-if="modalType==2">{{modalTitle.attr_name}} 속성 타입 편집하기</p>
         <select class="attrKeySelect" v-model="attrSelect" v-if="modalType==0">
           <option selected disabled hidden :value=0>속성 사전값 보기</option>
           <option v-for="opt in (this.attrDicData)" :key="opt.attr">{{opt.attr}}</option>
@@ -16,26 +17,31 @@
         </select>
         <div v-if="attrSelect==1"><input v-if="modalType==0" type="text" v-model="userAddAttr"></div>
         <div v-if="keySelect==1"><input v-if="modalType==1" type="text" v-model="userAddKeyAttr"></div>
-        <button v-if="modalType==0" @click="postAttr">대표 속성 설정하기</button>
-        <button v-if="modalType==1" @click="postKeyAttr">대표 결합키 설정하기</button>
+        <div v-if="modalType==2"><input type="text" v-model="userEditAttrType"></div>
+        <button v-if="modalType==0" @click="postAttr">대표 속성 편집하기</button>
+        <button v-if="modalType==1" @click="postKeyAttr">대표 결합키 편집하기</button>
+        <button v-if="modalType==2" @click="putType">속성 타입 편집하기</button>
+        <button @click="closeModal">닫기</button>
       </div>
     </div>
-    <p class="blackTitle">테이블 속성 도메인 스캔</p>
+    <p class="blackTitle">테이블 속성 편집</p>
     <p>"선택한 테이블 명" 속성 도메인 스캔</p>
     <table>
       <tr>
         <th>속성명</th>
         <th>속성 타입</th>
+        <th>속성 삭제</th>
         <th>대표속성명</th>
         <th>대표결합키</th>
       </tr>
       <tr v-for="item in (this.scanData)" :key="item.attr_name">
         <td>{{item.attr_name}}</td>
-        <td>{{item.attr_type}}</td>
+        <td>{{item.attr_type}} <button @click="openModal(item, 2)">편집</button></td>
+        <td @click="deleteAttr(item)">삭제하기</td>
         <td v-if="item.head_attr==null" @click="openModal(item, 0)">설정하기</td>
-        <td v-if="item.head_attr!=null" @click="openModal(item, 0)">{{item.head_attr}}</td>
+        <td v-if="item.head_attr!=null">{{item.head_attr}} <button @click="openModal(item, 0)">편집</button></td>
         <td v-if="item.head_key==null" @click="openModal(item, 1)">설정하기</td>
-        <td v-if="item.head_key!=null" @click="openModal(item, 1)">{{item.head_key}}</td>
+        <td v-if="item.head_key!=null">{{item.head_key}} <button @click="openModal(item, 1)">편집</button></td>
       </tr>
     </table>
     
@@ -58,6 +64,7 @@ export default {
       modalTitle : "",
       userAddAttr:"",
       userAddKeyAttr:"",
+      userEditAttrType:"",
       modalType : -1
     }
   },
@@ -69,12 +76,15 @@ export default {
   },
   methods: {
     setIndex(){
-      this.$store.state.persist.indexColor = 1
+      this.$store.state.persist.indexColor = 2
     },
     openModal(item, num){
       this.showModal = true
       this.modalType = num
       this.modalTitle = item
+    },
+    closeModal(){
+      this.showModal = false
     },
     
     async postAttr(){
@@ -89,7 +99,7 @@ export default {
         }catch(e){ console.log(e) }
       }
       //this.showAttrModal = false
-      this.$router.go('/scanattr')
+      this.$router.go('/editattr')
     },
 
     async postKeyAttr(){
@@ -104,7 +114,13 @@ export default {
         }catch(e){ console.log(e) }
       }
       //this.showAttrModal = false
-      this.$router.go('/scanattr')
+      this.$router.go('/editattr')
+    },
+    async putType(){
+      try{
+        await axios.put('/edit/type', {type:this.userEditAttrType, name:this.modalTitle.attr_name})
+        this.$router.go('/editattr')
+      }catch(e){ console.log(e) }
     },
     async fetchScanResult(){
       try {
@@ -131,7 +147,17 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    
+    },
+    async deleteAttr(item){
+      if(confirm(item.attr_name+" 속성을 영구 삭제하시겠습니까?")){
+          try{
+            console.log("지우고")
+            await axios.delete('/delete/attr', {data : {name : item.attr_name}})
+            this.$router.go('/editattr')
+          }catch(e){ console.log(e) }
+        }else{
+          console.log("no")
+        }
     }
   },
 }
@@ -153,5 +179,10 @@ export default {
     width: 300px;
     height: 200px;
     background: white;
+  }
+  .blackTitle{
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
   }
 </style>

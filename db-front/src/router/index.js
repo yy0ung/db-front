@@ -5,9 +5,14 @@ import ScanTable from '../views/tableScan/ScanDB.vue'
 import ScanTable2 from '../views/tableScan/ScanDB2.vue'
 import HomePage from '../views/HomePage.vue'
 import EditTable from '../views/editTable/EditTable.vue'
-import JoinSingle from '../views/JoinSingle.vue'
-import JoinMulti from '../views/JoinMulti.vue'
-import ShowResult from '../views/ShowResult.vue'
+import EditTable2 from '../views/editTable/EditTable2.vue'
+import JoinSingle from '../views/joinSingle/JoinSingle.vue'
+import SJoinSource from '../views/joinSingle/SearchSingleSource'
+import SJoinTarget from '../views/joinSingle/SearchSingleTarget'
+import MJoinSource from '../views/joinMulti/SearchMultiSource.vue'
+import MJoinTarget from '../views/joinMulti/SearchMultiTarget.vue'
+import JoinMulti from '../views/joinMulti/JoinMulti.vue'
+import ShowResult from '../views/showResult/ShowResult.vue'
 
 
 const routes = [
@@ -42,6 +47,11 @@ const routes = [
     component: EditTable
   },
   {
+    path: '/editattr',
+    name: 'EditTable2',
+    component: EditTable2
+  },
+  {
     path: '/joinsingle',
     name: 'JoinSingle',
     component: JoinSingle
@@ -50,6 +60,26 @@ const routes = [
     path: '/joinmulti',
     name: 'JoinMulti',
     component: JoinMulti
+  },
+  {
+    path: '/sjoinssearch',
+    name: 'SJoinSource',
+    component: SJoinSource
+  },
+  {
+    path: '/sjointsearch',
+    name: 'SJoinTarget',
+    component: SJoinTarget
+  },
+  {
+    path: '/mjoinssearch',
+    name: 'MJoinSource',
+    component: MJoinSource
+  },
+  {
+    path: '/mjointsearch',
+    name: 'MJoinTarget',
+    component: MJoinTarget
   },
   {
     path: '/showresult',
