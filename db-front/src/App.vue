@@ -18,7 +18,6 @@
         </div>
       </div>
       <div>
-        <router-link to="/">시작</router-link>
         <router-view/>
       </div>
     </div>
@@ -91,19 +90,20 @@ export default {
   padding-left: 20px;
 }
 .navArrow{
-  padding-right: 40px;
+  padding-right: 60px;
 }
 
 .dbInfo{
-  background: rgb(198, 220, 245);
-  width: 200px;
+  width: 250px;
+  border: #21365e 2px solid;
+  border-radius: 20px;
 }
 #nav a{
   text-decoration: none;
-  color: black;
+  color: rgb(172, 172, 172);
 }
 .navItem.active{
-  color: rgb(113, 151, 255);
+  color: #21365e;
   text-decoration: none;
 }
 </style>

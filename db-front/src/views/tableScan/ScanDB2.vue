@@ -2,8 +2,8 @@
   <div id="scanDB2">
     <div class="modal-back" v-if="showModal==true">
       <div class="attr-modal" v-if="showModal==true">
-      <p v-if="modalType==0">{{modalTitle.attr_name}} 대표 속성 선택하기</p>
-      <p v-if="modalType==1">{{modalTitle.attr_name}} 대표 결합키 선택하기</p>
+      <p class="modal-title" v-if="modalType==0">{{modalTitle.attr_name}} 대표 속성 선택하기</p>
+      <p class="modal-title" v-if="modalType==1">{{modalTitle.attr_name}} 대표 결합키 선택하기</p>
         <select class="attrKeySelect" v-model="attrSelect" v-if="modalType==0">
           <option selected disabled hidden :value=0>속성 사전값 보기</option>
           <option v-for="opt in (this.attrDicData)" :key="opt.attr">{{opt.attr}}</option>
@@ -14,15 +14,17 @@
           <option v-for="opt in (this.keyDicData)" :key="opt.key_attr">{{opt.key_attr}}</option>
           <option :value=1>사용자 추가</option>
         </select>
-        <div v-if="attrSelect==1"><input v-if="modalType==0" type="text" v-model="userAddAttr"></div>
-        <div v-if="keySelect==1"><input v-if="modalType==1" type="text" v-model="userAddKeyAttr"></div>
-        <button v-if="modalType==0" @click="postAttr">대표 속성 설정하기</button>
-        <button v-if="modalType==1" @click="postKeyAttr">대표 결합키 설정하기</button>
+        <div v-if="attrSelect==1"><input class="modal-input" v-if="modalType==0" type="text" v-model="userAddAttr" placeholder="입력하세요"></div>
+        <div v-if="keySelect==1"><input class="modal-input" v-if="modalType==1" type="text" v-model="userAddKeyAttr" placeholder="입력하세요"></div>
+        <button v-if="modalType==0" class="send-btn" @click="postAttr">대표 속성 설정하기</button>
+        <button v-if="modalType==1" class="send-btn" @click="postKeyAttr">대표 결합키 설정하기</button>
+        <button @click="closeModal" class="send-btn" id="btn-close">닫기</button>
       </div>
     </div>
     <p class="blackTitle">테이블 속성 도메인 스캔</p>
-    <p>"선택한 테이블 명" 속성 도메인 스캔</p>
-    <table>
+    <p class="blackSub">"선택한 테이블 명" 속성 도메인 스캔</p>
+    <div class="table-container">
+      <table>
       <tr>
         <th>속성명</th>
         <th>속성 타입</th>
@@ -32,12 +34,13 @@
       <tr v-for="item in (this.scanData)" :key="item.attr_name">
         <td>{{item.attr_name}}</td>
         <td>{{item.attr_type}}</td>
-        <td v-if="item.head_attr==null" @click="openModal(item, 0)">설정하기</td>
+        <td v-if="item.head_attr==null" @click="openModal(item, 0)" class="table-btn">설정하기</td>
         <td v-if="item.head_attr!=null" @click="openModal(item, 0)">{{item.head_attr}}</td>
-        <td v-if="item.head_key==null" @click="openModal(item, 1)">설정하기</td>
+        <td v-if="item.head_key==null" @click="openModal(item, 1)" class="table-btn">설정하기</td>
         <td v-if="item.head_key!=null" @click="openModal(item, 1)">{{item.head_key}}</td>
       </tr>
     </table>
+    </div>
     
     
   </div>  
@@ -76,16 +79,19 @@ export default {
       this.modalType = num
       this.modalTitle = item
     },
+    closeModal(){
+      this.showModal = false
+    },
     
     async postAttr(){
       if(this.attrSelect==1){
         try{
           await axios.post('/post/attr/dic', {id:null, attr:this.userAddAttr})
-          await axios.put('/put/attr', {attr:this.userAddAttr, name:this.attrModalTitle.attr_name})
+          await axios.put('/put/attr', {attr:this.userAddAttr, name:this.modalTitle.attr_name})
         }catch(e){ console.log(e) }
       }else{
         try{
-          await axios.put('/put/attr', {attr:this.attrSelect, name:this.attrModalTitle.attr_name})
+          await axios.put('/put/attr', {attr:this.attrSelect, name:this.modalTitle.attr_name})
         }catch(e){ console.log(e) }
       }
       //this.showAttrModal = false
@@ -150,8 +156,81 @@ export default {
     transition: opacity .3s ease;
   }
   .attr-modal{
-    width: 300px;
-    height: 200px;
-    background: white;
+    width: 400px;
+    height: 220px;
+    margin: 250px auto;
+    padding-left: 70px;
+    padding-right: 70px;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+    z-index: 2;
+    text-align: center;
   }
+  .blackSub{
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #21365e;
+  }
+  .table-container{
+    display: flex;
+    justify-content: center;
+  }
+  .blackTitle{
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #21365e;
+  }
+  table{
+    border-collapse: collapse;
+  }
+  th, td{
+    border: #0000009C 0.5px solid;
+    font-weight: 400;
+    padding: 9px;
+    padding-right: 15px;
+  }
+  th{
+    background: #e0e8f7;
+    text-align: center;
+  }
+  .table-btn{
+    color: #3c58b3;
+    text-decoration: underline;
+    cursor: pointer;
+    text-align: center;
+  }
+  .attrKeySelect{
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-top: 10px;
+    padding-left: 5px;
+    width: 250px;
+    height: 40px;
+    background-color: #f3f7ff;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+  }
+  .modal-input{
+    font-family: 'Noto Sans KR';
+    border: 10px;
+    width: 230px;
+    height: 30px;
+    margin-top: 10px;
+    padding-left: 15px;
+    border: 2px solid #a5aec0;
+    opacity: 1;
+    font-size: 15px;
+    color: black;
+  }
+  #btn-close{
+    margin-left: 5px;
+  }
+  
+  
 </style>

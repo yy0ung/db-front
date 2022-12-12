@@ -2,9 +2,9 @@
   <div id="editTable2">
     <div class="modal-back" v-if="showModal==true">
       <div class="attr-modal" v-if="showModal==true">
-      <p v-if="modalType==0">{{modalTitle.attr_name}} 대표 속성 편집하기</p>
-      <p v-if="modalType==1">{{modalTitle.attr_name}} 대표 결합키 편집하기</p>
-      <p v-if="modalType==2">{{modalTitle.attr_name}} 속성 타입 편집하기</p>
+      <p class="modal-title" v-if="modalType==0">{{modalTitle.attr_name}} 대표 속성 편집하기</p>
+      <p class="modal-title" v-if="modalType==1">{{modalTitle.attr_name}} 대표 결합키 편집하기</p>
+      <p class="modal-title" v-if="modalType==2">{{modalTitle.attr_name}} 속성 타입 편집하기</p>
         <select class="attrKeySelect" v-model="attrSelect" v-if="modalType==0">
           <option selected disabled hidden :value=0>속성 사전값 보기</option>
           <option v-for="opt in (this.attrDicData)" :key="opt.attr">{{opt.attr}}</option>
@@ -15,18 +15,19 @@
           <option v-for="opt in (this.keyDicData)" :key="opt.key_attr">{{opt.key_attr}}</option>
           <option :value=1>사용자 추가</option>
         </select>
-        <div v-if="attrSelect==1"><input v-if="modalType==0" type="text" v-model="userAddAttr"></div>
-        <div v-if="keySelect==1"><input v-if="modalType==1" type="text" v-model="userAddKeyAttr"></div>
-        <div v-if="modalType==2"><input type="text" v-model="userEditAttrType"></div>
-        <button v-if="modalType==0" @click="postAttr">대표 속성 편집하기</button>
-        <button v-if="modalType==1" @click="postKeyAttr">대표 결합키 편집하기</button>
-        <button v-if="modalType==2" @click="putType">속성 타입 편집하기</button>
-        <button @click="closeModal">닫기</button>
+        <div v-if="attrSelect==1"><input class="modal-input" v-if="modalType==0" type="text" v-model="userAddAttr" placeholder="입력하세요"></div>
+        <div v-if="keySelect==1"><input class="modal-input" v-if="modalType==1" type="text" v-model="userAddKeyAttr" placeholder="입력하세요"></div>
+        <div v-if="modalType==2"><input class="modal-input" type="text" v-model="userEditAttrType" placeholder="입력하세요"></div>
+        <button v-if="modalType==0" @click="postAttr" class="send-btn">대표 속성 편집하기</button>
+        <button v-if="modalType==1" @click="postKeyAttr" class="send-btn">대표 결합키 편집하기</button>
+        <button v-if="modalType==2" @click="putType" class="send-btn">속성 타입 편집하기</button>
+        <button @click="closeModal" class="send-btn" id="edit-modal-btn">닫기</button>
       </div>
     </div>
     <p class="blackTitle">테이블 속성 편집</p>
-    <p>"선택한 테이블 명" 속성 도메인 스캔</p>
-    <table>
+    <p class="blackSub">"선택한 테이블 명" 속성 도메인 스캔</p>
+    <div class="table-container">
+      <table>
       <tr>
         <th>속성명</th>
         <th>속성 타입</th>
@@ -36,14 +37,15 @@
       </tr>
       <tr v-for="item in (this.scanData)" :key="item.attr_name">
         <td>{{item.attr_name}}</td>
-        <td>{{item.attr_type}} <button @click="openModal(item, 2)">편집</button></td>
-        <td @click="deleteAttr(item)">삭제하기</td>
-        <td v-if="item.head_attr==null" @click="openModal(item, 0)">설정하기</td>
-        <td v-if="item.head_attr!=null">{{item.head_attr}} <button @click="openModal(item, 0)">편집</button></td>
-        <td v-if="item.head_key==null" @click="openModal(item, 1)">설정하기</td>
-        <td v-if="item.head_key!=null">{{item.head_key}} <button @click="openModal(item, 1)">편집</button></td>
+        <td>{{item.attr_type}} <span @click="openModal(item, 2)" class="table-btn-edit">편집</span></td>
+        <td @click="deleteAttr(item)" class="table-btn-del">삭제하기</td>
+        <td v-if="item.head_attr==null" @click="openModal(item, 0)" class="table-btn">설정하기</td>
+        <td v-if="item.head_attr!=null">{{item.head_attr}} <span @click="openModal(item, 0)" class="table-btn-edit">편집</span></td>
+        <td v-if="item.head_key==null" @click="openModal(item, 1)" class="table-btn">설정하기</td>
+        <td v-if="item.head_key!=null">{{item.head_key}} <span @click="openModal(item, 1)" class="table-btn-edit">편집</span></td>
       </tr>
-    </table>
+      </table>
+    </div>
     
     
   </div>  
@@ -175,14 +177,20 @@ export default {
     display: table;
     transition: opacity .3s ease;
   }
-  .attr-modal{
-    width: 300px;
-    height: 200px;
-    background: white;
+  
+  .table-btn-edit{
+    color: #3c58b3;
+    text-decoration: underline;
+    cursor: pointer;
   }
-  .blackTitle{
+  .table-btn-del{
+    color: #833636;
+    text-decoration: underline;
+    cursor: pointer;
     text-align: center;
-    font-size: 1.5rem;
-    font-weight: 700;
   }
+  #edit-modal-btn{
+    margin-left: 5px;
+  }
+  
 </style>

@@ -1,15 +1,18 @@
 <template>
   <div id="editTable">
     <p class="blackTitle">테이블 속성 편집</p>
-    <p>속성 스캔 완료 테이블 목록</p>
-    <table>
+    <p class="blackSub">속성 스캔 완료 테이블 목록</p>
+    <div class="table-container">
+      <table>
       <tr>
         <th>테이블 명</th>
         <th>레코드 수</th>
         <th>속성</th>
       </tr>
     </table>
-    <button @click="nextTest">다음</button>
+    
+    </div>
+    <button @click="nextTest" class="send-btn">선택하기</button>
   </div>  
 </template>
 
@@ -30,5 +33,7 @@ export default {
 </script>
 
 <style>
-
+#editTable{
+  text-align: center;
+}
 </style>

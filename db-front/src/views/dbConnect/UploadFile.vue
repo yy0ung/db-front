@@ -1,11 +1,11 @@
 <template>
   <div id="uploadFile">
     <p class="blackTitle">DB 연결 관리</p>
-    <form>
+    <form class="upload-container">
       <input type="file" ref="file" @change="test"/>
     </form>
     
-    <button @click="uploadFile">CSV 업로드</button>
+    <button class="send-btn" @click="uploadFile">CSV 업로드</button>
   </div>  
 </template>
 
@@ -52,5 +52,25 @@ export default {
 </script>
 
 <style>
-
+#uploadFile{
+  text-align: center;
+}
+.upload-container{
+  margin-top: 50px;
+}
+.upload-container input{
+  font-family: 'Noto Sans KR';
+  border-radius: 9px;
+  width: 400px;
+  height: 35px;
+  margin-top: 20px;
+  margin-left: 10px;
+  padding-left: 15px;
+  padding-right: 5px;
+  padding-top: 7px;
+  border: 0.75px solid #BCBCBC;
+  opacity: 1;
+  font-size: 17px;
+  color: grey;
+}
 </style>

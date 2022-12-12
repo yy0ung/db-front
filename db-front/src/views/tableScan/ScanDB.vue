@@ -1,15 +1,17 @@
 <template>
   <div id="scanDB">
     <p class="blackTitle">테이블 속성 도메인 스캔</p>
-    <p>대상 테이블 선택</p>
-    <table>
+    <p class="blackSub">대상 테이블 선택</p>
+    <div class="table-container">
+      <table>
       <tr>
         <th>테이블 명</th>
         <th>레코드 수</th>
         <th>속성</th>
       </tr>
     </table>
-    <button @click="nextTest">다음</button>
+    </div>
+    <button @click="nextTest" class="send-btn">선택하기</button>
   </div>  
 </template>
 
@@ -30,5 +32,7 @@ export default {
 </script>
 
 <style>
-
+#scanDB{
+  text-align: center;
+}
 </style>
