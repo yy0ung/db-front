@@ -3,9 +3,9 @@
     <div class="app-container">
       <div id="nav">
         <div class="dbInfo">
-          <p>DB 정보</p>
-          <p>HOST : {{this.$store.state.dbConnect.host}} PORT : {{this.$store.state.dbConnect.port}}</p>
-          <p>DATABASE : {{this.$store.state.dbConnect.db}}</p>
+          <p @click="cancle">DB 정보</p>
+          <p>HOST : {{host}} PORT : {{port}}</p>
+          <p>DATABASE : {{db}}</p>
         </div>
         <div class="navTitle">
           <router-link to="/connect"><span class="navItem" @click="indexC(0)" :class="{active: this.$store.state.persist.indexColor>=0}">DB 연결관리</span></router-link>
@@ -27,6 +27,8 @@
 
 <script>
 import axios from "axios";
+import VueCookies from 'vue-cookies'
+
 export default {
   name: 'App',
   data() {
@@ -37,12 +39,16 @@ export default {
     }
   },
   mounted() {
-     
+     this.getCookie()
   },
   
   methods: {
     indexC(num){
       this.$store.state.persist.indexColor = num
+    },
+    cancle(){
+      VueCookies.remove('info')
+      console.log("done")
     },
     async getData() {
       
@@ -53,6 +59,23 @@ export default {
         console.log(error);
       }
     },
+    getCookie(){
+      if(VueCookies.isKey("info")){
+        var info = VueCookies.get("info").toString()
+        var host = info.substring(0, info.indexOf("&"))
+        var port = info.substring(info.indexOf("&")+1,info.indexOf("%"))
+        var database = info.substring(info.indexOf("%")+1)
+
+        this.host = host
+        this.port = port
+        this.db = database
+
+      }else{
+        console.log("no")
+      }
+     //VueCookies.remove("none")
+    },
+
   },
 
   }

@@ -11,6 +11,8 @@
 
 <script>
 import axios from 'axios'
+import VueCookies from 'vue-cookies'
+
 export default {
   data() {
     return {
@@ -19,6 +21,7 @@ export default {
   },
   mounted() {
     this.setIndex()
+    this.checkConnect()
   },
   methods: {
     setIndex(){
@@ -26,8 +29,16 @@ export default {
     },
     test(){
       this.file = this.$refs.file.files
-      console.log(this.file)
-      console.log(this.file[0])
+    },
+    checkConnect(){
+      
+      if(!VueCookies.isKey("info")){
+        if(confirm('DB에 연결되어있지 않습니다.')){
+          this.$router.push('/connect')
+        }else{
+          this.$router.push('/connect')
+        }
+      }
     },
     
     async uploadFile(){

@@ -18,6 +18,8 @@
 
 <script>
 import axios from 'axios'
+import VueCookies from 'vue-cookies'
+
 export default {
   data() {
     return {
@@ -48,9 +50,8 @@ export default {
       try {
         const response = await axios.post("/db/connect", data);
         if(response.data){
-          this.$store.state.dbConnect.host = this.host
-          this.$store.state.dbConnect.port = this.port
-          this.$store.state.dbConnect.db = this.db
+          VueCookies.set("info", this.host+"&"+this.port+"%"+this.db, "1d")
+         
           this.$router.push('/uploadfile')
         }else{
           alert('입력한 정보를 확인하세요')
