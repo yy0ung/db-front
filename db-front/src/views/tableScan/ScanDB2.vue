@@ -23,21 +23,38 @@
     </div>
     <p class="blackTitle">테이블 속성 도메인 스캔</p>
     <p class="blackSub">"선택한 테이블 명" 속성 도메인 스캔</p>
+    <p class="blackSub">수치속성 도메인 스캔</p>
     <div class="table-container">
       <table>
       <tr>
         <th>속성명</th>
-        <th>속성 타입</th>
-        <th>대표속성명</th>
+        <th>데이터 타입</th>
+        <th>NULL 레코드 수</th>
+        <th>NULL 레코드 비율</th>
+        <th>상이 수치값</th>
+        <th>최대 값</th>
+        <th>최소 값</th>
+        <th>0 레코드 수</th>
+        <th>0 레코드 비율</th>
+        <th>대표속성</th>
+        <th>결합키 후보</th>
         <th>대표결합키</th>
       </tr>
-      <tr v-for="item in (this.scanData)" :key="item.attr_name">
-        <td>{{item.attr_name}}</td>
-        <td>{{item.attr_type}}</td>
-        <td v-if="item.head_attr==null" @click="openModal(item, 0)" class="table-btn">설정하기</td>
-        <td v-if="item.head_attr!=null" @click="openModal(item, 0)">{{item.head_attr}}</td>
-        <td v-if="item.head_key==null" @click="openModal(item, 1)" class="table-btn">설정하기</td>
-        <td v-if="item.head_key!=null" @click="openModal(item, 1)">{{item.head_key}}</td>
+      <tr v-for="item in (this.scanData)" :key="item.속성명">
+        <td>{{item.속성명}}</td>
+        <td>{{item.데이터_타입}}</td>
+        <td>{{item.NULL_레코드_수}}</td>
+        <td>{{item.NULL_레코드_비율}}</td>
+        <td>{{item.상이_수치_값}}</td>
+        <td>{{item.최대_값}}</td>
+        <td>{{item.최소_값}}</td>
+        <td>{{item.영_레코드_수}}</td>
+        <td>{{item.영_레코드_비율}}</td>
+        <td v-if="item.대표_속성==null" @click="openModal(item, 0)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_속성!=null" @click="openModal(item, 0)">{{item.item.대표_속성}}</td>
+        <td>{{item.결합키_후보}}</td>
+        <td v-if="item.대표_결합키==null" @click="openModal(item, 1)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_결합키!=null" @click="openModal(item, 1)">{{item.대표_결합키}}</td>
       </tr>
     </table>
     </div>
@@ -66,11 +83,20 @@ export default {
   },
   mounted() {
     this.setIndex()
-    this.fetchScanResult()
+    //this.fetchScanResult()
     this.fetchAttrDic()
     this.fetchKeyDic()
+    this.fetchT()
   },
   methods: {
+    async fetchT(){
+      
+      //await axios.post('/scan/scantable')
+      const response = await axios.get('/api/table')
+      this.scanData = response.data
+      
+      
+    },
     setIndex(){
       this.$store.state.persist.indexColor = 1
     },
