@@ -93,11 +93,11 @@ export default {
       if(this.attrSelect==1){
         try{
           await axios.post('/post/attr/dic', {id:null, attr:this.userAddAttr})
-          await axios.put('/put/attr', {attr:this.userAddAttr, name:this.attrModalTitle.attr_name})
+          await axios.put('/put/attr', {attr:this.userAddAttr, name:this.modalTitle.attr_name})
         }catch(e){ console.log(e) }
       }else{
         try{
-          await axios.put('/put/attr', {attr:this.attrSelect, name:this.attrModalTitle.attr_name})
+          await axios.put('/put/attr', {attr:this.attrSelect, name:this.modalTitle.attr_name})
         }catch(e){ console.log(e) }
       }
       //this.showAttrModal = false

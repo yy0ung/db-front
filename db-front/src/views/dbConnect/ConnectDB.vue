@@ -6,13 +6,13 @@
       <p class="connectInput">P O R T : <input class="cDBInput" type="text" v-model="this.port"></p>
       <p class="connectInput">DATABASE: <input class="cDBInput" type="text" v-model="this.db"></p>
       <p class="connectInput">U S E R : <input class="cDBInput" type="text" v-model="this.user"></p>
-      <p class="connectInput">PASSWORD: <input class="cDBInput" type="text" v-model="this.pw"></p>
+      <p class="connectInput">PASSWORD: <input class="cDBInput" type="password" v-model="this.pw"></p>
       <button class="send-btn" @click="setDB">DB 연결하기</button>
+      <button id="non-active" v-if="nextBtnActive==false">csv 업로드하러가기</button>
+      <button class="send-btn" id="active" @click="next" v-if="nextBtnActive==true">csv 업로드하러가기</button>
       <p class="connectWarn" @click="test">* DB에 연결해야 CSV 업로드가 가능합니다.</p>
     </div>
-    <div v-if="this.page==1">
-      aa
-    </div>
+    
   </div>  
 </template>
 
@@ -28,16 +28,27 @@ export default {
       db : "",
       user : "",
       pw: "",
+      nextBtnActive : false
       
     }
   },
   mounted() {
     this.setIndex()
+    this.checkConnect()
   },
   methods: {
     setIndex(){
       this.$store.state.persist.indexColor = 0
     },
+    checkConnect(){
+      
+      if(!VueCookies.isKey("info")){
+        this.nextBtnActive = false
+        }else{
+          this.nextBtnActive = true
+        }
+      },
+    
   
     //db 정보 입력하기
     async setDB() {
@@ -50,9 +61,10 @@ export default {
       try {
         const response = await axios.post("/db/connect", data);
         if(response.data){
+          console.log("aa")
           VueCookies.set("info", this.host+"&"+this.port+"%"+this.db, "1d")
-         
-          this.$router.push('/uploadfile')
+          this.$router.go()
+          
         }else{
           alert('입력한 정보를 확인하세요')
         }
@@ -60,8 +72,12 @@ export default {
         console.log(error);
       }
     },
-  },
+    next(){
+      this.$router.push('/uploadfile')
+    }
+  }
 }
+
 </script>
 
 <style>
@@ -105,5 +121,22 @@ export default {
 .send-btn:hover{
   color: white;
   background-color: #3c58b3;
+}
+#non-active{
+  border: 1px solid #afafaf;
+  color: #afafaf;
+  margin-left: 5px;
+  background-color: #FFFFFF;
+  padding: 8px 20px;
+  margin-top: 25px;
+  font-family: 'Noto Sans KR';
+  font-size: 1rem;
+  font-weight: medium;
+  border-radius: 26px;
+  cursor: pointer; 
+}
+
+#active{
+  margin-left: 5px;
 }
 </style>
