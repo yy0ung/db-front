@@ -19,6 +19,11 @@
 <script>
 import VueCookies from 'vue-cookies'
 export default {
+  data() {
+    return {
+      selectTable: "1_fitness_measurement"
+    }
+  },
   mounted() {
     this.setIndex()
     this.checkConnect()
@@ -36,8 +41,10 @@ export default {
         }
       }
     },
-    nextTest(){
-      this.$router.push('/editattr')
+    async nextTest(){
+      this.$router.push(`/editattr/${this.selectTable}`)
+      
+      
     }
   },
 }

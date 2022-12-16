@@ -22,7 +22,7 @@
       </div>
     </div>
     <p class="blackTitle">테이블 속성 도메인 스캔</p>
-    <p class="blackSub">"선택한 테이블 명" 속성 도메인 스캔</p>
+    <p class="blackSub">"{{tableName}}" 속성 도메인 스캔</p>
     <p class="blackSub">범주속성 도메인 스캔</p>
     <div class="table-container">
       <table>
@@ -44,8 +44,8 @@
         <td>{{item.NULL_레코드_수}}</td>
         <td>{{item.NULL_레코드_비율}}</td>
         <td>{{item.상이_범주_값}}</td>
-        <td>{{item.특수무자_포함_레코드_수}}</td>
-        <td>{{item.특수무자_포함_레코드_비율}}</td>
+        <td>{{item.특수문자_포함_레코드_수}}</td>
+        <td>{{item.특수문자_포함_레코드_비율}}</td>
         <td v-if="item.대표_속성==null" @click="openModal(item, 0, 0)" class="table-btn">설정하기</td>
         <td v-if="item.대표_속성!=null" @click="openModal(item, 0, 0)">{{item.대표_속성}}</td>
         <td>{{item.결합키_후보}}</td>
@@ -100,6 +100,7 @@ import axios from 'axios'
 export default {
   data() {
     return {
+      tableName : this.$route.params.file,
       scanDataS : [],
       scanDataC : [],
       attrDicData : [],
@@ -127,8 +128,8 @@ export default {
       let responseS = null
       let responseC = null
       while(responseS==null || responseC==null){
-        responseS = await axios.get('/api/statistictable')
-        responseC = await axios.get('/api/categorytable')
+        responseS = await axios.get(`/api/statistictable/${this.tableName}`)
+        responseC = await axios.get(`/api/categorytable/${this.tableName}`)
         console.log("loading")
       }
       this.scanDataS = responseS.data
@@ -143,9 +144,9 @@ export default {
       this.modalType = num
       this.modalTitle = item
       if(type==0){
-        this.tableType = "1_fitness_measurement_category_attribute"
+        this.tableType = this.tableName+"_category_attribute"
       }else{
-        this.tableType = "1_fitness_measurement_statistic_attribute"
+        this.tableType = this.tableName+"_statistic_attribute"
       }
     },
     closeModal(){
@@ -164,22 +165,22 @@ export default {
         }catch(e){ console.log(e) }
       }
       //this.showAttrModal = false
-      this.$router.go('/scanattr')
+      this.$router.go()
     },
 
     async postKeyAttr(){
       if(this.keySelect==1){
         try{
           await axios.post('/post/key/dic', {id:null, key:this.userAddKeyAttr})
-          await axios.put('/put/key', {key:this.userAddKeyAttr, name:this.modalTitle.attr_name})
+          await axios.put('/put/key', {table:this.tableType, key:this.userAddKeyAttr, name:this.modalTitle.속성명})
         }catch(e){ console.log(e) }
       }else{
         try{
-          await axios.put('/put/key', {key:this.keySelect, name:this.modalTitle.attr_name})
+          await axios.put('/put/key', {table:this.tableType, key:this.keySelect, name:this.modalTitle.속성명})
         }catch(e){ console.log(e) }
       }
       //this.showAttrModal = false
-      this.$router.go('/scanattr')
+      this.$router.go()
     },
     async fetchScanResult(){
       try {

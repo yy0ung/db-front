@@ -37,7 +37,7 @@ const routes = [
     component: ScanTable
   },
   {
-    path: '/scanattr',
+    path: '/scanattr/:file',
     name: 'ScanDB2',
     component: ScanTable2
   },
@@ -47,7 +47,7 @@ const routes = [
     component: EditTable
   },
   {
-    path: '/editattr',
+    path: '/editattr/:file',
     name: 'EditTable2',
     component: EditTable2
   },

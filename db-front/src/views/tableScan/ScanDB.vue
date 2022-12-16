@@ -19,6 +19,11 @@
 import axios from 'axios'
 import VueCookies from 'vue-cookies'
 export default {
+  data() {
+    return {
+      selectTable: "1_fitness_measurement"
+    }
+  },
   mounted() {
     this.setIndex()
     this.checkConnect()
@@ -37,8 +42,8 @@ export default {
       }
     },
     async nextTest(){
-      this.$router.push('/scanattr')
-      await axios.post('/scan/scantable')
+      this.$router.push(`/scanattr/${this.selectTable}`)
+      await axios.post('/scan/scantable', {table : this.selectTable})
       
     }
   },
