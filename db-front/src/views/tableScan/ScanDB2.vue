@@ -2,8 +2,8 @@
   <div id="scanDB2">
     <div class="modal-back" v-if="showModal==true">
       <div class="attr-modal" v-if="showModal==true">
-      <p class="modal-title" v-if="modalType==0">{{modalTitle.attr_name}} 대표 속성 선택하기</p>
-      <p class="modal-title" v-if="modalType==1">{{modalTitle.attr_name}} 대표 결합키 선택하기</p>
+      <p class="modal-title" v-if="modalType==0">{{modalTitle.속성명}} 대표 속성 선택하기</p>
+      <p class="modal-title" v-if="modalType==1">{{modalTitle.속성명}} 대표 결합키 선택하기</p>
         <select class="attrKeySelect" v-model="attrSelect" v-if="modalType==0">
           <option selected disabled hidden :value=0>속성 사전값 보기</option>
           <option v-for="opt in (this.attrDicData)" :key="opt.attr">{{opt.attr}}</option>
@@ -23,6 +23,38 @@
     </div>
     <p class="blackTitle">테이블 속성 도메인 스캔</p>
     <p class="blackSub">"선택한 테이블 명" 속성 도메인 스캔</p>
+    <p class="blackSub">범주속성 도메인 스캔</p>
+    <div class="table-container">
+      <table>
+      <tr>
+        <th>속성명</th>
+        <th>데이터 타입</th>
+        <th>NULL 레코드 수</th>
+        <th>NULL 레코드 비율</th>
+        <th>상이 범주값</th>
+        <th>특수문자 포함 레코드 수</th>
+        <th>특수문자 포함 레코드 비율</th>
+        <th>대표속성</th>
+        <th>결합키 후보</th>
+        <th>대표결합키</th>
+      </tr>
+      <tr v-for="item in (this.scanDataC)" :key="item.속성명">
+        <td>{{item.속성명}}</td>
+        <td>{{item.데이터_타입}}</td>
+        <td>{{item.NULL_레코드_수}}</td>
+        <td>{{item.NULL_레코드_비율}}</td>
+        <td>{{item.상이_범주_값}}</td>
+        <td>{{item.특수무자_포함_레코드_수}}</td>
+        <td>{{item.특수무자_포함_레코드_비율}}</td>
+        <td v-if="item.대표_속성==null" @click="openModal(item, 0, 0)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_속성!=null" @click="openModal(item, 0, 0)">{{item.대표_속성}}</td>
+        <td>{{item.결합키_후보}}</td>
+        <td v-if="item.대표_결합키==null" @click="openModal(item, 1, 0)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_결합키!=null" @click="openModal(item, 1, 0)">{{item.대표_결합키}}</td>
+      </tr>
+    </table>
+    </div>
+
     <p class="blackSub">수치속성 도메인 스캔</p>
     <div class="table-container">
       <table>
@@ -40,7 +72,7 @@
         <th>결합키 후보</th>
         <th>대표결합키</th>
       </tr>
-      <tr v-for="item in (this.scanData)" :key="item.속성명">
+      <tr v-for="item in (this.scanDataS)" :key="item.속성명">
         <td>{{item.속성명}}</td>
         <td>{{item.데이터_타입}}</td>
         <td>{{item.NULL_레코드_수}}</td>
@@ -50,11 +82,11 @@
         <td>{{item.최소_값}}</td>
         <td>{{item.영_레코드_수}}</td>
         <td>{{item.영_레코드_비율}}</td>
-        <td v-if="item.대표_속성==null" @click="openModal(item, 0)" class="table-btn">설정하기</td>
-        <td v-if="item.대표_속성!=null" @click="openModal(item, 0)">{{item.item.대표_속성}}</td>
+        <td v-if="item.대표_속성==null" @click="openModal(item, 0, 1)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_속성!=null" @click="openModal(item, 0, 1)">{{item.대표_속성}}</td>
         <td>{{item.결합키_후보}}</td>
-        <td v-if="item.대표_결합키==null" @click="openModal(item, 1)" class="table-btn">설정하기</td>
-        <td v-if="item.대표_결합키!=null" @click="openModal(item, 1)">{{item.대표_결합키}}</td>
+        <td v-if="item.대표_결합키==null" @click="openModal(item, 1, 1)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_결합키!=null" @click="openModal(item, 1, 1)">{{item.대표_결합키}}</td>
       </tr>
     </table>
     </div>
@@ -68,7 +100,8 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      scanData : [],
+      scanDataS : [],
+      scanDataC : [],
       attrDicData : [],
       keyDicData : [],
       attrSelect : 0,
@@ -78,7 +111,8 @@ export default {
       modalTitle : "",
       userAddAttr:"",
       userAddKeyAttr:"",
-      modalType : -1
+      modalType : -1,
+      tableType : ""
     }
   },
   mounted() {
@@ -90,20 +124,29 @@ export default {
   },
   methods: {
     async fetchT(){
-      
-      //await axios.post('/scan/scantable')
-      const response = await axios.get('/api/table')
-      this.scanData = response.data
-      
+      let responseS = null
+      let responseC = null
+      while(responseS==null || responseC==null){
+        responseS = await axios.get('/api/statistictable')
+        responseC = await axios.get('/api/categorytable')
+        console.log("loading")
+      }
+      this.scanDataS = responseS.data
+      this.scanDataC = responseC.data
       
     },
     setIndex(){
       this.$store.state.persist.indexColor = 1
     },
-    openModal(item, num){
+    openModal(item, num, type){
       this.showModal = true
       this.modalType = num
       this.modalTitle = item
+      if(type==0){
+        this.tableType = "1_fitness_measurement_category_attribute"
+      }else{
+        this.tableType = "1_fitness_measurement_statistic_attribute"
+      }
     },
     closeModal(){
       this.showModal = false
@@ -113,11 +156,11 @@ export default {
       if(this.attrSelect==1){
         try{
           await axios.post('/post/attr/dic', {id:null, attr:this.userAddAttr})
-          await axios.put('/put/attr', {attr:this.userAddAttr, name:this.modalTitle.attr_name})
+          await axios.put('/put/attr', {table:this.tableType, attr:this.userAddAttr, name:this.modalTitle.속성명})
         }catch(e){ console.log(e) }
       }else{
         try{
-          await axios.put('/put/attr', {attr:this.attrSelect, name:this.modalTitle.attr_name})
+          await axios.put('/put/attr', {table:this.tableType, attr:this.attrSelect, name:this.modalTitle.속성명})
         }catch(e){ console.log(e) }
       }
       //this.showAttrModal = false

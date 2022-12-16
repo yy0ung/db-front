@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import VueCookies from 'vue-cookies'
 export default {
   mounted() {
@@ -35,8 +36,10 @@ export default {
         }
       }
     },
-    nextTest(){
+    async nextTest(){
       this.$router.push('/scanattr')
+      await axios.post('/scan/scantable')
+      
     }
   },
 }
