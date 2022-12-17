@@ -59,6 +59,44 @@
       </tr>
       </table>
     </div>
+
+    <p class="blackSub">수치속성 도메인 스캔</p>
+    <div class="table-container">
+      <table>
+      <tr>
+        <th>속성명</th>
+        <th>데이터 타입</th>
+        <th>속성 삭제</th>
+        <th>NULL 레코드 수</th>
+        <th>NULL 레코드 비율</th>
+        <th>상이 수치값</th>
+        <th>최대 값</th>
+        <th>최소 값</th>
+        <th>0 레코드 수</th>
+        <th>0 레코드 비율</th>
+        <th>대표속성</th>
+        <th>결합키 후보</th>
+        <th>대표결합키</th>
+      </tr>
+      <tr v-for="item in (this.scanDataS)" :key="item.속성명">
+        <td>{{item.속성명}}</td>
+        <td>{{item.데이터_타입}} <span @click="openModal(item, 2, 1)" class="table-btn-edit">편집</span></td>
+        <td @click="deleteAttr(item, 1)" class="table-btn-del">삭제하기</td>
+        <td>{{item.NULL_레코드_수}}</td>
+        <td>{{item.NULL_레코드_비율}}</td>
+        <td>{{item.상이_수치_값}}</td>
+        <td>{{item.최대_값}}</td>
+        <td>{{item.최소_값}}</td>
+        <td>{{item.영_레코드_수}}</td>
+        <td>{{item.영_레코드_비율}}</td>
+        <td v-if="item.대표_속성==null" @click="openModal(item, 0, 1)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_속성!=null">{{item.대표_속성}} <span @click="openModal(item, 0, 1)" class="table-btn-edit">편집</span></td>
+        <td>{{item.결합키_후보}}</td>
+        <td v-if="item.대표_결합키==null" @click="openModal(item, 1, 1)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_결합키!=null" @click="openModal(item, 1, 1)">{{item.대표_결합키}} <span @click="openModal(item, 1, 0)" class="table-btn-edit">편집</span></td>
+      </tr>
+    </table>
+    </div>
     
     
   </div>  
@@ -82,12 +120,13 @@ export default {
       userAddAttr:"",
       userAddKeyAttr:"",
       userEditAttrType:"",
-      modalType : -1
+      modalType : -1,
+      tableType : ""
     }
   },
   mounted() {
     this.setIndex()
-    this.fetchScanResult()
+    
     this.fetchAttrDic()
     this.fetchKeyDic()
     this.fetchT()
@@ -108,10 +147,15 @@ export default {
     setIndex(){
       this.$store.state.persist.indexColor = 2
     },
-    openModal(item, num){
+    openModal(item, num, type){
       this.showModal = true
       this.modalType = num
       this.modalTitle = item
+      if(type==0){
+        this.tableType = this.tableName+"_category_attribute"
+      }else{
+        this.tableType = this.tableName+"_statistic_attribute"
+      }
     },
     closeModal(){
       this.showModal = false
@@ -150,19 +194,11 @@ export default {
     //여기부터
     async putType(){
       try{
-        await axios.put('/edit/type', {type:this.userEditAttrType, name:this.modalTitle.attr_name})
-        this.$router.go('/editattr')
+        await axios.put('/edit/type', {table: this.tableType, type:this.userEditAttrType, name:this.modalTitle.속성명})
+        this.$router.go()
       }catch(e){ console.log(e) }
     },
-    async fetchScanResult(){
-      try {
-        const response = await axios.get("/scan");
-        this.scanData = response.data
-      } catch (error) {
-        console.log(error);
-      }
     
-    },
     async fetchAttrDic(){
       try {
         const response = await axios.get("/attr/dic");
@@ -180,12 +216,17 @@ export default {
         console.log(error);
       }
     },
-    async deleteAttr(item){
-      if(confirm(item.attr_name+" 속성을 영구 삭제하시겠습니까?")){
+    async deleteAttr(item, type){
+      if(type==0){
+        this.tableType = this.tableName+"_category_attribute"
+      }else{
+        this.tableType = this.tableName+"_statistic_attribute"
+      }
+      if(confirm(item.속성명+" 속성을 영구 삭제하시겠습니까?")){
           try{
             console.log("지우고")
-            await axios.delete('/delete/attr', {data : {name : item.attr_name}})
-            this.$router.go('/editattr')
+            await axios.delete('/delete/attr', {data : {table: this.tableType, name : item.속성명}})
+            this.$router.go()
           }catch(e){ console.log(e) }
         }else{
           console.log("no")
