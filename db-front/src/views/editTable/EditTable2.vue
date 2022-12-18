@@ -97,7 +97,7 @@
       </tr>
     </table>
     </div>
-    
+    <button class="send-btn" @click="doneEdit">편집 완료하기</button>
     
   </div>  
 </template>
@@ -231,6 +231,11 @@ export default {
         }else{
           console.log("no")
         }
+    },
+    async doneEdit(){
+      await axios.post('/post/scandonetable', {fileName: this.tableName})
+      console.log("done")
+      this.$router.push('/sjoinssearch')
     }
   },
 }

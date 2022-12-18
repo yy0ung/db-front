@@ -23,8 +23,12 @@
     </div>
     <p class="blackTitle">테이블 속성 도메인 스캔</p>
     <p class="blackSub">"{{tableName}}" 속성 도메인 스캔</p>
-    <p class="blackSub">범주속성 도메인 스캔</p>
-    <div class="table-container">
+    <p class="blackSub" v-if="loading==false">범주속성 도메인 스캔</p>
+    <div class="spinner" v-if="loading==true">
+        <i class="fas fa-spinner"></i>
+          불러오는 중
+      </div>
+    <div class="table-container" v-if="loading==false">
       <table>
       <tr>
         <th>속성명</th>
@@ -48,15 +52,16 @@
         <td>{{item.특수문자_포함_레코드_비율}}</td>
         <td v-if="item.대표_속성==null" @click="openModal(item, 0, 0)" class="table-btn">설정하기</td>
         <td v-if="item.대표_속성!=null" @click="openModal(item, 0, 0)">{{item.대표_속성}}</td>
-        <td>{{item.결합키_후보}}</td>
+        <td v-if="item.결합키_후보!=null">O</td>
+        <td v-if="item.결합키_후보==null">X</td>
         <td v-if="item.대표_결합키==null" @click="openModal(item, 1, 0)" class="table-btn">설정하기</td>
         <td v-if="item.대표_결합키!=null" @click="openModal(item, 1, 0)">{{item.대표_결합키}}</td>
       </tr>
     </table>
     </div>
 
-    <p class="blackSub">수치속성 도메인 스캔</p>
-    <div class="table-container">
+    <p class="blackSub" v-if="loading==false">수치속성 도메인 스캔</p>
+    <div class="table-container" v-if="loading==false">
       <table>
       <tr>
         <th>속성명</th>
@@ -84,7 +89,8 @@
         <td>{{item.영_레코드_비율}}</td>
         <td v-if="item.대표_속성==null" @click="openModal(item, 0, 1)" class="table-btn">설정하기</td>
         <td v-if="item.대표_속성!=null" @click="openModal(item, 0, 1)">{{item.대표_속성}}</td>
-        <td>{{item.결합키_후보}}</td>
+        <td v-if="item.결합키_후보!=null">O</td>
+        <td v-if="item.결합키_후보==null">X</td>
         <td v-if="item.대표_결합키==null" @click="openModal(item, 1, 1)" class="table-btn">설정하기</td>
         <td v-if="item.대표_결합키!=null" @click="openModal(item, 1, 1)">{{item.대표_결합키}}</td>
       </tr>
@@ -113,7 +119,8 @@ export default {
       userAddAttr:"",
       userAddKeyAttr:"",
       modalType : -1,
-      tableType : ""
+      tableType : "",
+      loading :true
     }
   },
   mounted() {
@@ -134,6 +141,7 @@ export default {
       }
       this.scanDataS = responseS.data
       this.scanDataC = responseC.data
+      this.loading = false
       
     },
     setIndex(){
@@ -301,6 +309,13 @@ export default {
   #btn-close{
     margin-left: 5px;
   }
+  .spinner{
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #3c58b3;
+  margin-top: 150px;
+}
   
   
 </style>

@@ -3,10 +3,12 @@
     <p class="blackTitle">단일 결합</p>
     <p>Target 테이블 검색</p>
     <button @click="nextTest">다음</button>
+    
   </div>  
 </template>
 
 <script>
+// import axios from 'axios'
 export default {
   mounted() {
     this.setIndex()
@@ -17,7 +19,8 @@ export default {
     },
     nextTest(){
       this.$router.push('/joinsingle')
-    }
+    },
+    
   },
 }
 </script>

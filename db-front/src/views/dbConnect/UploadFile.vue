@@ -29,6 +29,7 @@ export default {
     },
     test(){
       this.file = this.$refs.file.files
+      
     },
     checkConnect(){
       
@@ -57,6 +58,11 @@ export default {
         )
         console.log(response)
       }catch(e){ console.log(e) }
+      //csv_done_table 올리기
+      let f = this.file[0].name.toString()
+      let fName = f.substring(0,f.indexOf('.'))
+      await axios.post('/post/csvdonetable', {fileName: fName})
+      console.log("done")
     }
   },
 }
