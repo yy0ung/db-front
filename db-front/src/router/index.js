@@ -52,12 +52,12 @@ const routes = [
     component: EditTable2
   },
   {
-    path: '/joinsingle',
+    path: '/joinsingle/:source/:target',
     name: 'JoinSingle',
     component: JoinSingle
   },
   {
-    path: '/joinmulti',
+    path: '/joinmulti/:source/:target',
     name: 'JoinMulti',
     component: JoinMulti
   },
@@ -67,7 +67,7 @@ const routes = [
     component: SJoinSource
   },
   {
-    path: '/sjointsearch',
+    path: '/sjointsearch/:source',
     name: 'SJoinTarget',
     component: SJoinTarget
   },
@@ -77,7 +77,7 @@ const routes = [
     component: MJoinSource
   },
   {
-    path: '/mjointsearch',
+    path: '/mjointsearch/:source',
     name: 'MJoinTarget',
     component: MJoinTarget
   },

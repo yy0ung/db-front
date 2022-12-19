@@ -2,6 +2,7 @@
   <div id="editTable">
     <p class="blackTitle">테이블 속성 편집</p>
     <p class="blackSub">속성 스캔 완료 테이블 목록</p>
+    <p class="blackSub">선택 테이블 : {{this.selectTable}}</p>
     <div class="table-container">
       <table>
       <tr>
@@ -10,7 +11,7 @@
         <th>속성</th>
       </tr>
       <tr v-for="item in (this.scanData)" :key="item.테이블_명">
-        <td>{{item.테이블_명}}</td>
+        <td  @click="clickTable(item.테이블_명)" class="select-td">{{item.테이블_명}}</td>
         <td>{{item.레코드_수}}</td>
         <td>{{item.속성}}</td>
       </tr>
@@ -27,7 +28,7 @@ import VueCookies from 'vue-cookies'
 export default {
   data() {
     return {
-      selectTable: "5_bank_marketing",
+      selectTable: "",
       scanData: []
     }
   },
@@ -56,8 +57,9 @@ export default {
     },
     async nextTest(){
       this.$router.push(`/editattr/${this.selectTable}`)
-      
-      
+    },
+    clickTable(item){
+      this.selectTable = item
     }
   },
 }
@@ -66,5 +68,9 @@ export default {
 <style>
 #editTable{
   text-align: center;
+}
+
+.select-td{
+  cursor: pointer;
 }
 </style>

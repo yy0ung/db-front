@@ -41,6 +41,7 @@
         <th>대표속성</th>
         <th>결합키 후보</th>
         <th>대표결합키</th>
+        <th>범주속성사전 내려받기</th>
       </tr>
       <tr v-for="item in (this.scanDataC)" :key="item.속성명">
         <td>{{item.속성명}}</td>
@@ -56,6 +57,7 @@
         <td v-if="item.결합키_후보==null">X</td>
         <td v-if="item.대표_결합키==null" @click="openModal(item, 1, 0)" class="table-btn">설정하기</td>
         <td v-if="item.대표_결합키!=null" @click="openModal(item, 1, 0)">{{item.대표_결합키}}</td>
+        <td class="table-btn">다운로드</td>
       </tr>
     </table>
     </div>
@@ -76,6 +78,7 @@
         <th>대표속성</th>
         <th>결합키 후보</th>
         <th>대표결합키</th>
+        <th>범주속성사전 내려받기</th>
       </tr>
       <tr v-for="item in (this.scanDataS)" :key="item.속성명">
         <td>{{item.속성명}}</td>
@@ -93,6 +96,7 @@
         <td v-if="item.결합키_후보==null">X</td>
         <td v-if="item.대표_결합키==null" @click="openModal(item, 1, 1)" class="table-btn">설정하기</td>
         <td v-if="item.대표_결합키!=null" @click="openModal(item, 1, 1)">{{item.대표_결합키}}</td>
+        <td class="table-btn">다운로드</td>
       </tr>
     </table>
     </div>
@@ -139,8 +143,10 @@ export default {
         responseC = await axios.get(`/api/categorytable/${this.tableName}`)
         console.log("loading")
       }
+      
       this.scanDataS = responseS.data
       this.scanDataC = responseC.data
+      console.log(responseS.data.length, this.scanDataS.length, responseS.data[responseS.data.length-1].NULL_레코드_비율)
       this.loading = false
       
     },
