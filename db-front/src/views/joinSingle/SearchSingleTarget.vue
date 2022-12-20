@@ -44,12 +44,12 @@ export default {
   data() {
     return {
       sourceTable : this.$route.params.source,
-      selectTable: "",
       scanData : [],
       sourceData : {},
       targetData : [],
       targetTable : "",
-      headKey: ""
+      headKey: "",
+      attrArr:[]
     }
   },
   mounted() {
@@ -59,6 +59,10 @@ export default {
   methods: {
     setIndex(){
       this.$store.state.persist.indexColor = 3
+    },
+    async test(){
+      const response = await axios.post('/get/attrkey', {tablename : [this.sourceTable, this.targetTable], key:"나이"})
+      console.log(response.data[0].속성명)
     },
     async nextTest(){
       this.$router.push(`/joinsingle/${this.sourceTable}/${this.targetTable}`)

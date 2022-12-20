@@ -61,7 +61,11 @@ export default {
       //csv_done_table 올리기
       let f = this.file[0].name.toString()
       let fName = f.substring(0,f.indexOf('.'))
-      await axios.post('/post/csvdonetable', {fileName: fName})
+      //여기 보완
+      if(fName=="1_fitness_measurement"){
+        console.log()
+      }
+      await axios.post('/post/csvdonetable', {schema : this.$store.state.tableSchema, fileName: fName})
       console.log("done")
     }
   },

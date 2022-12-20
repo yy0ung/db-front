@@ -13,6 +13,9 @@ import MJoinSource from '../views/joinMulti/SearchMultiSource.vue'
 import MJoinTarget from '../views/joinMulti/SearchMultiTarget.vue'
 import JoinMulti from '../views/joinMulti/JoinMulti.vue'
 import ShowResult from '../views/showResult/ShowResult.vue'
+import ShowScan from '../views/showResult/ShowScan.vue'
+import ShowSingleJoin from '../views/showResult/ShowSingleJoin.vue'
+import ShowMultiJoin from '../views/showResult/ShowMultiJoin.vue'
 
 
 const routes = [
@@ -85,6 +88,21 @@ const routes = [
     path: '/showresult',
     name: 'ShowResult',
     component: ShowResult
+  },
+  {
+    path: '/showscan/:file',
+    name: 'ShowScan',
+    component: ShowScan
+  },
+  {
+    path: '/showsingle',
+    name: 'ShowSingle',
+    component: ShowSingleJoin
+  },
+  {
+    path: '/showmulti',
+    name: 'ShowMulti',
+    component: ShowMultiJoin
   }
 ]
 

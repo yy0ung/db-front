@@ -1,9 +1,14 @@
 <template>
-  <div id="joinSingle">
-    <p class="blackTitle">단일 결합</p>
+  <div id="showSingle">
+    <p class="blackTitle">결과 조회</p>
+    <div class="index-container">
+      <span class="grayBack" @click="goScan">속성 스캔 결과 조회</span>
+      <span class="blackBack">단일 결합 결과 조회</span>
+      <span class="grayBack" @click="goMulti">다중 결합 결과 조회</span>
+    </div>
     <p>단일 결합 결과</p>
     <div class="table-container">
-      <table>
+      <table v-if="show">
         <tr>
           <th>Source 테이블</th>
           <th>테이블 A레코드 수</th>
@@ -17,6 +22,7 @@
           <th>결합 성공률 (W2)</th>
           <th>결합 진행상황</th>
           <th>결합 테이블 명</th>
+          <th>CSV 저장</th>
         </tr>
         <tr v-for="item in (this.joinResult)" :key="item">
           <td>{{item.테이블A}}</td>
@@ -30,21 +36,13 @@
           <td>{{item.결합_성공률_W1}}</td>
           <td>{{item.결합_성공률_W2}}</td>
           <td>진행상황</td>
-          <td>{{item.결합_테이블_명}}</td>
+          <td>single_{{item.테이블A}}_{{item.테이블B}}</td>
+          <td class="table-btn" @click="makeCsv(item.테이블A, item.테이블B)">
+            다운로드</td>
         </tr>
       </table>
     </div>
-    <!-- <div class="table-container">
-      <table v-if="show">
-        <tr>
-          <th v-for="item in (Object.keys(this.joinData[0]))" :key="item">{{item}}</th>
-        </tr>
-        <tr v-for="item in (this.joinData)" :key="item">
-          <td v-for="i in item" :key="i">{{i}}</td>
-        </tr>
-      </table>
-    </div> -->
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -55,36 +53,41 @@ export default {
       joinData : [],
       joinResult : [],
       show : false,
-      source : this.$route.params.source,
-      target : this.$route.params.target
     }
   },
   mounted() {
     this.setIndex()
-    //this.singleJoin()
     this.getSingleResult()
   },
   methods: {
     setIndex(){
-      this.$store.state.persist.indexColor = 3
+      this.$store.state.persist.indexColor = 5
     },
-    // async singleJoin(){
-    //   const response = await axios.get(`/get/singlejoin/${this.source}/2_physical_instructor_practice_info`)
-    //   this.joinData = response.data
-    //   console.log(response.data)
-    //   this.show = true
-    // },
-
     async getSingleResult(){
       const response = await axios.get('/get/singleresult')
       this.joinResult = response.data
       console.log(response.data)
       this.show = true
+    },
+    goSingle(){
+      this.$router.push('/showsingle')
+    },
+    goMulti(){
+      this.$router.push('/showmulti')
+    },
+    goScan(){
+      this.$router.push('/showresult')
+    },
+    async makeCsv(a,b){
+      var fileCsv = "single_"+a+"_"+b
+      const response = await axios.get(`/download/${fileCsv}`)
+      if(response){
+        alert('다운로드 성공')
+      }
     }
 
-    
-    
   },
+  
 }
 </script>
 

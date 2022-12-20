@@ -20,6 +20,7 @@
       </tr>
     </table>
     <button class="send-btn" @click="startJoin">실행</button>
+    <button @click="test">테스트</button>
     <button @click="nextTest">다음</button>
   </div>  
 </template>
@@ -44,6 +45,10 @@ export default {
     this.search(null, null, null, null)
   },
   methods: {
+    async test(){
+      const response = await axios.post('/get/attrkey', {tablename : ["1_fitness_measurement"], key:"나이"})
+      console.log(response.data[0].속성명)
+    },
     setIndex(){
       this.$store.state.persist.indexColor = 4
     },

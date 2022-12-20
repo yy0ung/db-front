@@ -27,7 +27,7 @@ import VueCookies from 'vue-cookies'
 export default {
   data() {
     return {
-      selectTable: "",
+      selectTable: "2_physical_instructor_practice_info",
       scanData: []
     }
   },
