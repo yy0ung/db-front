@@ -34,7 +34,8 @@ export default {
   },
   mounted() {
     this.setIndex()
-    this.checkConnect()
+    this.checkConnect(),
+    this.schema()
   },
   methods: {
     setIndex(){
@@ -47,8 +48,12 @@ export default {
         }else{
           this.nextBtnActive = true
         }
-      },
-    
+    },
+    async schema(){
+      const data = [this.$store.state.tableSchema.one, this.$store.state.tableSchema.two,
+      this.$store.state.tableSchema.three, this.$store.state.tableSchema.four, this.$store.state.tableSchema.five]
+      await axios.post('/schema', {sqlSchema : data})
+    },    
   
     //db 정보 입력하기
     async setDB() {

@@ -11,7 +11,33 @@ export default createStore({
       user : "",
       pw : ""
     },
+    uploadScan : true,
     tableSchema :{
+      /*
+        CREATE TABLE `attr_dic` (
+       `id` int(11) DEFAULT NULL,
+        `attr` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+        PRIMARY KEY (`attr`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+        insert into attr_dic values(null, '학업정보');
+        insert into attr_dic values(null, '금융정보');
+        insert into attr_dic values(null, '회원정보');
+        insert into attr_dic values(null, '건강정보');
+
+        insert into key_dic values(null, '주민등록번호');
+        insert into key_dic values(null, '전화번호');
+        insert into key_dic values(null, '차량번호');
+        insert into key_dic values(null, '이메일 주소');
+        insert into key_dic values(null, 'IP주소');
+
+        CREATE TABLE `key_dic` (
+        `id` int(11) DEFAULT NULL,
+        `key_attr` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+        PRIMARY KEY (`key_attr`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+      */
+
       one : "CREATE TABLE IF NOT EXISTS `1_fitness_measurement` ("
         +"`PHONE_NUM` text COLLATE utf8_bin DEFAULT NULL,"
         +"`MAIL_ADDR` text COLLATE utf8_bin DEFAULT NULL,"

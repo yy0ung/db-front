@@ -55,7 +55,7 @@
         <td v-if="item.대표_속성!=null" @click="openModal(item, 0, 0)">{{item.대표_속성}}</td>
         <td v-if="item.결합키_후보!=null">O</td>
         <td v-if="item.결합키_후보==null">X</td>
-        <td v-if="item.대표_결합키==null && item.결합키_후보!=null" @click="openModal(item, 1, 1)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_결합키==null && item.결합키_후보!=null" @click="openModal(item, 1, 0)" class="table-btn">설정하기</td>
         <td v-if="item.대표_결합키==null && item.결합키_후보==null">-</td>
         <td v-if="item.대표_결합키!=null" @click="openModal(item, 1, 0)">{{item.대표_결합키}}</td>
         
@@ -144,6 +144,7 @@ export default {
     async fetchT(){
       let responseS = null
       let responseC = null
+      
       while(responseS==null || responseC==null){
         responseS = await axios.get(`/api/statistictable/${this.tableName}`)
         responseC = await axios.get(`/api/categorytable/${this.tableName}`)
@@ -201,15 +202,6 @@ export default {
       }
       //this.showAttrModal = false
       this.$router.go()
-    },
-    async fetchScanResult(){
-      try {
-        const response = await axios.get("/scan");
-        this.scanData = response.data
-      } catch (error) {
-        console.log(error);
-      }
-    
     },
     async fetchAttrDic(){
       try {

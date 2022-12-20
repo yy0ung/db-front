@@ -46,9 +46,11 @@ export default {
       var frm = new FormData()
       
       frm.append("file", this.file[0])
+      let f = this.file[0].name.toString()
+      let fName = f.substring(0,f.indexOf('.'))
       console.log(frm)
       try{
-        const response = await axios.post(
+        await axios.post(
           '/fileupload', frm, 
           {
             headers:{
@@ -56,16 +58,12 @@ export default {
           }
           }
         )
-        console.log(response)
+        
       }catch(e){ console.log(e) }
       //csv_done_table 올리기
-      let f = this.file[0].name.toString()
-      let fName = f.substring(0,f.indexOf('.'))
-      //여기 보완
-      if(fName=="1_fitness_measurement"){
-        console.log()
-      }
-      await axios.post('/post/csvdonetable', {schema : this.$store.state.tableSchema, fileName: fName})
+      console.log("중복")
+      await axios.post('/post/csvdonetable', {fileName: fName})
+      
       console.log("done")
     }
   },

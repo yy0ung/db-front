@@ -9,18 +9,19 @@
         <th>레코드 수</th>
         <th>대표 속성</th>
         <th>대표 결합키</th>
-        <th>결합 테이블 선택</th>
+        
       </tr>
       <tr v-for="item in (this.targetData)" :key="item.테이블_명">
         <td @click="clickTable(item.테이블_명)" class="select-td">{{item.테이블_명}}</td>
         <td>{{item.레코드_수}}</td>
         <td>{{item.대표_속성}}</td>
         <td>{{item.대표_결합키}}</td>
-        <td><input type="checkbox" name="select"></td>
+        
       </tr>
     </table>
+    <p class="blackSub">선택한 테이블 : {{this.selectTable}}</p>
+    <button @click="reset">초기화</button>
     <button class="send-btn" @click="startJoin">실행</button>
-    <button @click="test">테스트</button>
     <button @click="nextTest">다음</button>
   </div>  
 </template>
@@ -31,23 +32,35 @@ export default {
   data() {
     return {
       sourceTable : this.$route.params.source,
-      selectTable: ["2_physical_instructor_practice_info", "5_bank_marketing"],
+      selectTable: [],
       scanData : [],
       targetData : [],
       sourceData : {},
-      targetTable : "",
       headKey: "",
-      attrArr: ["TEL_NO", "contect_num"]
+      attrArr: [],
+      sourcKeyAttr: ""
     }
   },
   mounted() {
     this.setIndex()
     this.search(null, null, null, null)
+    this.setSourceKey()
   },
   methods: {
+    async setSourceKey(){
+      const response = await axios.post('/get/attrkey', {tablename : this.sourceTable , key:"전화번호"})
+      this.sourcKeyAttr = response.data[0].속성명
+      console.log(this.sourcKeyAttr)
+    },
     async test(){
-      const response = await axios.post('/get/attrkey', {tablename : ["1_fitness_measurement"], key:"나이"})
-      console.log(response.data[0].속성명)
+      
+      for(let t in this.selectTable){
+        const response = await axios.post('/get/attrkey', {tablename : this.selectTable[t] , key:"전화번호"})
+        this.attrArr.push(response.data[0].속성명)
+      }
+      console.log(this.attrArr)
+      //
+      //console.log(response.data[0])
     },
     setIndex(){
       this.$store.state.persist.indexColor = 4
@@ -79,21 +92,22 @@ export default {
       
     },
     clickTable(item){
-      this.targetTable = item
-      console.log(this.targetTable)
+      this.selectTable.push(item)
+      console.log(this.selectTable)
     },
-    startJoin(){
+    async startJoin(){
       console.log("do")
+      await this.test()
       this.multiJoin()
       this.multiJoinResultPost()
     },
     async multiJoin(){
       //get으로 각 att 불러오기
-
+      
       const data = {
           table1 : this.sourceTable,
           table2 : this.selectTable,
-          att1 : "PHONE_NUM",
+          att1 : this.sourcKeyAttr,
           att2 : this.attrArr
         }
         await axios.post('/post/multijoin', data)
@@ -107,6 +121,11 @@ export default {
         }
         await axios.post('/post/multiresult', data)
         console.log("bb")
+    },
+    
+    reset(){
+      this.selectTable = []
+      console.log(this.selectTable)
     }
   },
 }

@@ -27,7 +27,7 @@ import VueCookies from 'vue-cookies'
 export default {
   data() {
     return {
-      selectTable: "2_physical_instructor_practice_info",
+      selectTable: "",
       scanData: []
     }
   },
@@ -43,7 +43,7 @@ export default {
     async fetchTable(){
       const response = await axios.get('/get/csvdonetable')
       this.scanData = response.data
-      console.log(response.data)
+      
     },
     checkConnect(){
       if(!VueCookies.isKey("info")){
@@ -55,8 +55,11 @@ export default {
       }
     },
     async nextTest(){
+      this.$store.state.uploadScan = false
       this.$router.push(`/scanattr/${this.selectTable}`)
-      await axios.post('/scan/scantable', {table : this.selectTable})
+      const response = await axios.post('/scan/scantable', {table : this.selectTable})
+      this.$store.state.uploadScan = response.data
+      console.log(response.data)
       
     },
     clickTable(item){

@@ -49,23 +49,31 @@ export default {
       targetData : [],
       targetTable : "",
       headKey: "",
-      attrArr:[]
+      sourceAttr:"",
+      attrArr:""
     }
   },
   mounted() {
     this.setIndex()
     this.search(null, null, null, null)
+    this.setSourceKey()
   },
   methods: {
     setIndex(){
       this.$store.state.persist.indexColor = 3
     },
+    async setSourceKey(){
+      const response = await axios.post('/get/attrkey', {tablename : this.sourceTable , key:"전화번호"})
+      this.sourceAttr = response.data[0].속성명
+      console.log(this.sourceAttr, "--------")
+    },
     async test(){
-      const response = await axios.post('/get/attrkey', {tablename : [this.sourceTable, this.targetTable], key:"나이"})
-      console.log(response.data[0].속성명)
+      const response = await axios.post('/get/attrkey', {tablename : this.targetTable, key:"전화번호"})
+      this.attrArr = response.data[0].속성명
     },
     async nextTest(){
       this.$router.push(`/joinsingle/${this.sourceTable}/${this.targetTable}`)
+      await this.test()
       this.singleJoinResultPost()
       this.singleJoin()
     },
@@ -98,12 +106,14 @@ export default {
     },
     async singleJoin(){
       //get으로 각 att 불러오기
+      
       const data = {
         table1 : this.sourceTable,
-        table2 : "2_physical_instructor_practice_info",
-        att1 : "PHONE_NUM",
-        att2 : "TEL_NO"
+        table2 : this.targetTable,
+        att1 : this.sourceAttr,
+        att2 : this.attrArr
       }
+      console.log("*****",data)
       const response = await axios.post('/post/singlejoin', data)
       this.joinData = response.data
       this.show = true
@@ -112,11 +122,11 @@ export default {
     async singleJoinResultPost(){
       const data = {
         table1 : this.sourceTable,
-        table2 : "2_physical_instructor_practice_info",
+        table2 : this.targetTable,
       }
       await axios.post('/post/singleresult', data)
-    }
-    
+    },
+   
     
   },
 }
