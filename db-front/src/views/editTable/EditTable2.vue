@@ -121,7 +121,8 @@ export default {
       userAddKeyAttr:"",
       userEditAttrType:"",
       modalType : -1,
-      tableType : ""
+      tableType : "",
+      category : true
     }
   },
   mounted() {
@@ -153,8 +154,10 @@ export default {
       this.modalTitle = item
       if(type==0){
         this.tableType = this.tableName+"_category_attribute"
+        this.category=true
       }else{
         this.tableType = this.tableName+"_statistic_attribute"
+        this.category=false
       }
     },
     closeModal(){
@@ -193,10 +196,22 @@ export default {
 
     //여기부터
     async putType(){
-      try{
-        await axios.put('/edit/type', {table: this.tableType, type:this.userEditAttrType, name:this.modalTitle.속성명})
-        this.$router.go()
-      }catch(e){ console.log(e) }
+      if(this.category){
+        if(this.userEditAttrType=="int" || this.userEditAttrType=="float"){
+          alert('해당 타입으로 변경 불가합니다.')
+        }else{
+          try{
+            await axios.put('/edit/type', {table: this.tableType, type:this.userEditAttrType, name:this.modalTitle.속성명})
+            this.$router.go()
+          }catch(e){ console.log(e) }
+        }
+      }else{
+        try{
+            await axios.put('/edit/type', {table: this.tableType, type:this.userEditAttrType, name:this.modalTitle.속성명})
+            this.$router.go()
+          }catch(e){ console.log(e) }
+      }
+      
     },
     
     async fetchAttrDic(){

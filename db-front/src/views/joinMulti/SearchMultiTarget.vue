@@ -44,21 +44,22 @@ export default {
   mounted() {
     this.setIndex()
     this.search(null, null, null, null)
-    this.setSourceKey()
+    //this.setSourceKey()
   },
   methods: {
     async setSourceKey(){
-      const response = await axios.post('/get/attrkey', {tablename : this.sourceTable , key:"전화번호"})
+      const response = await axios.post('/get/attrkey', {tablename : this.sourceTable , key:this.headKey})
       this.sourcKeyAttr = response.data[0].속성명
-      console.log(this.sourcKeyAttr)
+      console.log(this.sourcKeyAttr,"/////")
     },
     async test(){
       
       for(let t in this.selectTable){
-        const response = await axios.post('/get/attrkey', {tablename : this.selectTable[t] , key:"전화번호"})
+        const response = await axios.post('/get/attrkey', {tablename : this.selectTable[t] , key:this.headKey})
         this.attrArr.push(response.data[0].속성명)
+        console.log(response.data[0])
       }
-      console.log(this.attrArr)
+      
       //
       //console.log(response.data[0])
     },
@@ -87,6 +88,7 @@ export default {
         
       }
       this.headKey = this.sourceData.대표_결합키
+      this.setSourceKey()
 
       console.log(this.headKey)
       

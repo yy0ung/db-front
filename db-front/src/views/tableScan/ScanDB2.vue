@@ -153,7 +153,6 @@ export default {
       
       this.scanDataS = responseS.data
       this.scanDataC = responseC.data
-      console.log(responseS.data.length, this.scanDataS.length, responseS.data[responseS.data.length-1].NULL_레코드_비율)
       this.loading = false
       
     },

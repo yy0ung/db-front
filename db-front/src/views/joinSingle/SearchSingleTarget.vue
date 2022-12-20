@@ -56,19 +56,19 @@ export default {
   mounted() {
     this.setIndex()
     this.search(null, null, null, null)
-    this.setSourceKey()
+    //this.setSourceKey()
   },
   methods: {
     setIndex(){
       this.$store.state.persist.indexColor = 3
     },
     async setSourceKey(){
-      const response = await axios.post('/get/attrkey', {tablename : this.sourceTable , key:"전화번호"})
+      const response = await axios.post('/get/attrkey', {tablename : this.sourceTable , key:this.headKey})
       this.sourceAttr = response.data[0].속성명
       console.log(this.sourceAttr, "--------")
     },
     async test(){
-      const response = await axios.post('/get/attrkey', {tablename : this.targetTable, key:"전화번호"})
+      const response = await axios.post('/get/attrkey', {tablename : this.targetTable, key:this.headKey})
       this.attrArr = response.data[0].속성명
     },
     async nextTest(){
@@ -96,6 +96,7 @@ export default {
       }
 
       this.headKey = this.sourceData.대표_결합키
+      this.setSourceKey()
 
       console.log("aa",this.targetData)
       
