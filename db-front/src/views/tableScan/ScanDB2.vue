@@ -145,7 +145,7 @@ export default {
       let responseS = null
       let responseC = null
       
-      while(responseS==null || responseC==null){
+      while(responseS==null || responseC==null || responseS.data[responseS.data.length-1]==null){
         responseS = await axios.get(`/api/statistictable/${this.tableName}`)
         responseC = await axios.get(`/api/categorytable/${this.tableName}`)
         console.log("loading")
@@ -153,7 +153,11 @@ export default {
       
       this.scanDataS = responseS.data
       this.scanDataC = responseC.data
+      console.log()
       this.loading = false
+
+      const re = await axios.put('/put/scanbool', {table : this.tableName})
+      console.log(re.data)
       
     },
     setIndex(){

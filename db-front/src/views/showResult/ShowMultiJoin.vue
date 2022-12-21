@@ -6,8 +6,12 @@
       <span class="grayBack" @click="goSingle">단일 결합 결과 조회</span>
       <span class="blackBack">다중 결합 결과 조회</span>
     </div>
+    <div class="spinner" v-if="this.$store.state.joinMulti==false">
+        <i class="fas fa-spinner"></i>
+          불러오는 중
+      </div>
     <p>다중 결합 결과</p>
-    <div class="table-container">
+    <div class="table-container" v-if="this.$store.state.joinMulti==true">
       <table>
         <tr>
           <th>Source 테이블</th>
@@ -35,7 +39,8 @@
           <td>{{item.결과_레코드_수}}</td>
           <td>{{item.결합_성공률_W1}}</td>
           <td>{{item.결합_성공률_W2}}</td>
-          <td>진행상황</td>
+          <td v-if="this.$store.state.joinMulti = false">진행중</td>
+          <td v-if="this.$store.state.joinMulti = true">완료</td>
           <td>multi_{{item.테이블A}}_{{item.테이블B}}</td>
           <td class="table-btn" @click="makeCsv(item.테이블A, item.테이블B)">
             다운로드</td>
@@ -77,6 +82,7 @@ export default {
       this.joinResult = response.data
       console.log(response.data)
       this.show = true
+      this.$store.state.joinMulti==true
     },
     goSingle(){
       this.$router.push('/showsingle')

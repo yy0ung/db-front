@@ -7,7 +7,11 @@
       <span class="grayBack" @click="goMulti">다중 결합 결과 조회</span>
     </div>
     <p>단일 결합 결과</p>
-    <div class="table-container">
+    <div class="spinner" v-if="this.$store.state.joinSingle==false">
+        <i class="fas fa-spinner"></i>
+          불러오는 중
+      </div>
+    <div class="table-container" v-if="this.$store.state.joinSingle==true">
       <table v-if="show">
         <tr>
           <th>Source 테이블</th>
@@ -35,7 +39,8 @@
           <td>{{item.결과_레코드_수}}</td>
           <td>{{item.결합_성공률_W1}}</td>
           <td>{{item.결합_성공률_W2}}</td>
-          <td>진행상황</td>
+          <td v-if="this.$store.state.joinSingle = false">진행중</td>
+          <td v-if="this.$store.state.joinSingle = true">완료</td>
           <td>single_{{item.테이블A}}_{{item.테이블B}}</td>
           <td class="table-btn" @click="makeCsv(item.테이블A, item.테이블B)">
             다운로드</td>
@@ -67,6 +72,7 @@ export default {
       const response = await axios.get('/get/singleresult')
       this.joinResult = response.data
       console.log(response.data)
+      this.$store.state.joinSingle = true
       this.show = true
     },
     goSingle(){
@@ -80,6 +86,7 @@ export default {
     },
     async makeCsv(a,b){
       var fileCsv = "single_"+a+"_"+b
+      console.log("aaa", fileCsv)
       const response = await axios.get(`/download/${fileCsv}`)
       if(response){
         alert('다운로드 성공')

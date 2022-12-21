@@ -136,8 +136,10 @@ export default {
       }else{
         makeC = this.tableName+"_statistic_attribute"
       }
-      await axios.get(`/download/${makeC}`)
-      console.log("download")
+      const response = await axios.get(`/download/${makeC}`)
+      if(response){
+        alert('다운로드 성공')
+      }
     },
     goSingle(){
       this.$router.push('/showsingle')

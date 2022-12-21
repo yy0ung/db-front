@@ -16,9 +16,9 @@
         <th>속성</th>
       </tr>
       <tr v-for="item in (this.scanData)" :key="item.테이블_명">
-        <td  @click="clickTable(item.테이블_명)" class="select-td">{{item.테이블_명}}</td>
-        <td>{{item.레코드_수}}</td>
-        <td>{{item.속성}}</td>
+        <td  @click="clickTable(item.테이블_명)" class="select-td" v-if="item.스캔여부==1">{{item.테이블_명}}</td>
+        <td v-if="item.스캔여부==1">{{item.레코드_수}}</td>
+        <td v-if="item.스캔여부==1">{{item.속성}}</td>
       </tr>
     </table>
     

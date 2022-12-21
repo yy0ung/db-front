@@ -12,6 +12,8 @@ export default createStore({
       pw : ""
     },
     uploadScan : true,
+    joinSingle : true,
+    joinMulti : true,
     tableSchema :{
       /*
         CREATE TABLE `attr_dic` (

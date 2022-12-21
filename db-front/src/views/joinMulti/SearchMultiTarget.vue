@@ -3,7 +3,8 @@
     <p class="blackTitle">다중 결합</p>
     <p class="blackSub">Target 테이블 검색</p>
     <p class="blackSub">결합 가능한 테이블 목록</p>
-    <table>
+    <div class="table-container">
+      <table>
       <tr>
         <th>테이블 명</th>
         <th>레코드 수</th>
@@ -19,10 +20,11 @@
         
       </tr>
     </table>
-    <p class="blackSub">선택한 테이블 : {{this.selectTable}}</p>
-    <button @click="reset">초기화</button>
+    </div>
+    <p class="blackSub">선택한 테이블 : {{this.selectTable}}  <button @click="reset" class="send-btn">초기화</button></p>
+    
     <button class="send-btn" @click="startJoin">실행</button>
-    <button @click="nextTest">다음</button>
+    <button @click="nextTest" class="send-btn">다음</button>
   </div>  
 </template>
 
@@ -82,7 +84,7 @@ export default {
 
       for(let i=0; i<this.scanData.length; i++){
         //console.log(this.sourceData.대표_결합키, this.scanData[i].대표_결합키)
-        if((this.sourceData.대표_결합키).indexOf(this.scanData[i].대표_결합키)>=0){
+        if((this.sourceData.대표_결합키).indexOf(this.scanData[i].대표_결합키)>=0 && this.scanData[i].테이블_명!=this.sourceData.테이블_명){
           this.targetData.push(this.scanData[i])
         }
         
@@ -98,10 +100,12 @@ export default {
       console.log(this.selectTable)
     },
     async startJoin(){
+      this.$store.state.joinMulti==false
       console.log("do")
       await this.test()
       this.multiJoin()
       this.multiJoinResultPost()
+      
     },
     async multiJoin(){
       //get으로 각 att 불러오기
@@ -112,14 +116,17 @@ export default {
           att1 : this.sourcKeyAttr,
           att2 : this.attrArr
         }
-        await axios.post('/post/multijoin', data)
-        console.log("aa")
+        const response = await axios.post('/post/multijoin', data)
+        if(response.data){
+          alert('결합 진행중')
+        }
       
     },
     async multiJoinResultPost(){
       const data = {
           table1 : this.sourceTable,
-          table2 : this.selectTable
+          table2 : this.selectTable,
+          key : this.headKey
         }
         await axios.post('/post/multiresult', data)
         console.log("bb")

@@ -3,7 +3,8 @@
     <p class="blackTitle">단일 결합</p>
     <p class="blackSub">Target 테이블 검색</p>
     <p class="blackSub">현재 선택된 source 테이블</p>
-    <table>
+    <div class="table-container">
+      <table>
       <tr>
         <th>테이블 명</th>
         <th>레코드 수</th>
@@ -16,9 +17,11 @@
         <td>{{sourceData.대표_속성}}</td>
         <td>{{sourceData.대표_결합키}}</td>
       </tr>
-    </table>
+      </table>
+    </div>
     <p class="blackSub">선택 가능한 테이블 목록</p>
-    <table>
+    <div class="table-container">
+      <table>
       <tr>
         <th>테이블 명</th>
         <th>레코드 수</th>
@@ -32,8 +35,10 @@
         <td>{{item.대표_결합키}}</td>
       </tr>
     </table>
+    </div>
+    
     <p class="blackSub">선택한 테이블 : {{this.targetTable}}</p>
-    <button @click="nextTest">다음</button>
+    <button @click="nextTest" class="send-btn">다음</button>
     
   </div>  
 </template>
@@ -72,6 +77,7 @@ export default {
       this.attrArr = response.data[0].속성명
     },
     async nextTest(){
+      this.$store.state.joinSingle = false
       this.$router.push(`/joinsingle/${this.sourceTable}/${this.targetTable}`)
       await this.test()
       this.singleJoinResultPost()
@@ -89,7 +95,7 @@ export default {
       }
       for(let i=0; i<this.scanData.length; i++){
         //console.log(this.sourceData.대표_결합키, this.scanData[i].대표_결합키)
-        if((this.sourceData.대표_결합키).indexOf(this.scanData[i].대표_결합키)>=0){
+        if((this.sourceData.대표_결합키).indexOf(this.scanData[i].대표_결합키)>=0 && this.scanData[i].테이블_명!=this.sourceData.테이블_명){
           this.targetData.push(this.scanData[i])
         }
         
@@ -124,6 +130,7 @@ export default {
       const data = {
         table1 : this.sourceTable,
         table2 : this.targetTable,
+        key: this.headKey
       }
       await axios.post('/post/singleresult', data)
     },

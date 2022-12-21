@@ -53,8 +53,10 @@
         <td>{{item.특수문자_포함_레코드_비율}}</td>
         <td v-if="item.대표_속성==null" @click="openModal(item, 0, 0)" class="table-btn">설정하기</td>
         <td v-if="item.대표_속성!=null">{{item.대표_속성}} <span @click="openModal(item, 0, 0)" class="table-btn-edit">편집</span></td>
-        <td>{{item.결합키_후보}}</td>
-        <td v-if="item.대표_결합키==null" @click="openModal(item, 1, 0)" class="table-btn">설정하기</td>
+        <td v-if="item.결합키_후보!=null">O</td>
+        <td v-if="item.결합키_후보==null">X</td>
+        <td v-if="item.대표_결합키==null && item.결합키_후보!=null" @click="openModal(item, 1, 0)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_결합키==null && item.결합키_후보==null">-</td>
         <td v-if="item.대표_결합키!=null" @click="openModal(item, 1, 0)">{{item.대표_결합키}} <span @click="openModal(item, 1, 0)" class="table-btn-edit">편집</span></td>
       </tr>
       </table>
@@ -91,8 +93,10 @@
         <td>{{item.영_레코드_비율}}</td>
         <td v-if="item.대표_속성==null" @click="openModal(item, 0, 1)" class="table-btn">설정하기</td>
         <td v-if="item.대표_속성!=null">{{item.대표_속성}} <span @click="openModal(item, 0, 1)" class="table-btn-edit">편집</span></td>
-        <td>{{item.결합키_후보}}</td>
-        <td v-if="item.대표_결합키==null" @click="openModal(item, 1, 1)" class="table-btn">설정하기</td>
+        <td v-if="item.결합키_후보!=null">O</td>
+        <td v-if="item.결합키_후보==null">X</td>
+        <td v-if="item.대표_결합키==null && item.결합키_후보!=null" @click="openModal(item, 1, 1)" class="table-btn">설정하기</td>
+        <td v-if="item.대표_결합키==null && item.결합키_후보==null">-</td>
         <td v-if="item.대표_결합키!=null" @click="openModal(item, 1, 1)">{{item.대표_결합키}} <span @click="openModal(item, 1, 0)" class="table-btn-edit">편집</span></td>
       </tr>
     </table>
@@ -248,9 +252,12 @@ export default {
         }
     },
     async doneEdit(){
-      await axios.post('/post/scandonetable', {fileName: this.tableName})
-      console.log("done")
-      this.$router.push('/sjoinssearch')
+      const response = await axios.post('/post/scandonetable', {fileName: this.tableName})
+      if(response.data){
+        this.$router.push('/edit')
+      }
+      
+      
     }
   },
 }

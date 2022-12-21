@@ -62,8 +62,12 @@ export default {
       }catch(e){ console.log(e) }
       //csv_done_table 올리기
       console.log("중복")
-      await axios.post('/post/csvdonetable', {fileName: fName})
-      
+      const response = await axios.post('/post/csvdonetable', {fileName: fName})
+      if(response.data){
+        alert('업로드 완료')
+      }else{
+        alert('업로드 실패. 다시 시도하세요')
+      }
       console.log("done")
     }
   },

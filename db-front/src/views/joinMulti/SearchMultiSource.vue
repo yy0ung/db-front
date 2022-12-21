@@ -8,9 +8,11 @@
       <span class="connectInput">대표속성 : <input class="searchInput" type="text" v-model="this.headAttr"></span>
       <span class="connectInput">속성명 : <input class="searchInput" type="text" v-model="this.attrName"></span>
       <button class="send-btn" @click="searchBtn">검색</button>
+      <button class="send-btn" @click="refresh">초기화</button>
     </div>
     <p class="blackSub">선택 가능한 테이블 목록</p>
-    <table>
+    <div class="table-container">
+      <table>
       <tr>
         <th>테이블 명</th>
         <th>레코드 수</th>
@@ -24,8 +26,9 @@
         <td>{{item.대표_결합키}}</td>
       </tr>
     </table>
+    </div>
     <p class="blackSub">선택한 테이블 : {{this.selectTable}}</p>
-    <button @click="nextTest">다음</button>
+    <button @click="nextTest" class="send-btn">다음</button>
   </div>  
 </template>
 
@@ -74,11 +77,19 @@ export default {
     clickTable(item){
       this.selectTable = item
       console.log(this.selectTable)
+    },
+    refresh(){
+      this.$router.go()
     }
   },
 }
 </script>
 
 <style>
-
+.search-container{
+  margin-bottom: 50px;
+}
+.search-container span{
+  margin-right: 30px;
+}
 </style>
