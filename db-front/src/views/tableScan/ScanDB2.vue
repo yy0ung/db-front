@@ -225,16 +225,20 @@ export default {
     
     },
     async makeCsv(type){
-      var makeC = null
       if(type==0){
-        makeC = this.tableName+"_category_attribute"
+        var makeC1 = this.tableName+"_category_attribute"
+        const response = await axios.get(`/download/${makeC1}`)
+        if(response){
+          alert('다운로드 성공')
+        }
       }else{
-        makeC = this.tableName+"_statistic_attribute"
+        var makeC2 = this.tableName+"_statistic_attribute"
+        const response = await axios.get(`/download/${makeC2}`)
+        if(response){
+          alert('다운로드 성공')
+        }
       }
-      const response = await axios.get(`/download/${makeC}`)
-      if(response){
-        alert('다운로드 성공')
-      }
+      
     }
   },
 }
