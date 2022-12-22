@@ -47,6 +47,7 @@
         </tr>
       </table>
     </div>
+    <button class="send-btn" @click="makeCsvRes" v-if="this.$store.state.joinMulti==true">다중 결합 결과 다운로드</button>
   </div>
 </template>
 
@@ -99,10 +100,14 @@ export default {
       if(response){
         alert('다운로드 성공')
       }
-    }
-
-
-    
+    },
+    async makeCsvRes(){
+      var fileCsv = "multi_join_result"
+      const response = await axios.get(`/download/${fileCsv}`)
+      if(response){
+        alert('다운로드 성공')
+      }
+    }    
     
   },
 }

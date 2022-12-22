@@ -47,6 +47,7 @@
         </tr>
       </table>
     </div>
+    <button class="send-btn" @click="makeCsvRes" v-if="this.$store.state.joinSingle==true">단일 결합 결과 다운로드</button>
   </div>
 </template>
 
@@ -87,6 +88,13 @@ export default {
     async makeCsv(a,b){
       var fileCsv = "single_"+a+"_"+b
       console.log("aaa", fileCsv)
+      const response = await axios.get(`/download/${fileCsv}`)
+      if(response){
+        alert('다운로드 성공')
+      }
+    },
+    async makeCsvRes(){
+      var fileCsv = "single_join_result"
       const response = await axios.get(`/download/${fileCsv}`)
       if(response){
         alert('다운로드 성공')

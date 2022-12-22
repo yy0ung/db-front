@@ -6,7 +6,7 @@
       <span class="connectInput">테이블명 : <input class="searchInput" type="text" v-model="this.tableName"></span>
       <span class="connectInput">표준 결합키 : <input class="searchInput" type="text" v-model="this.headKey"></span>
       <span class="connectInput">대표속성 : <input class="searchInput" type="text" v-model="this.headAttr"></span>
-      <span class="connectInput">속성명 : <input class="searchInput" type="text" v-model="this.attrName"></span>
+      <span class="connectInput">속성명 : <input class="searchInput" type="text" v-model="this.attName"></span>
       <button class="send-btn" @click="searchBtn">검색</button>
       <button class="send-btn" @click="refresh">초기화</button>
     </div>
@@ -42,7 +42,7 @@ export default {
       tableName : null,
       headKey :null,
       headAttr : null,
-      attrName : null,
+      attName : null,
       scanData : []
     }
   },

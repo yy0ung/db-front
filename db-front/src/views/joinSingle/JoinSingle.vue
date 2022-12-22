@@ -34,12 +34,13 @@
           <td>{{item.결과_레코드_수}}</td>
           <td>{{item.결합_성공률_W1}}</td>
           <td>{{item.결합_성공률_W2}}</td>
-          <td>진행상황</td>
+          <td>완료</td>
           <td>single_{{item.테이블A}}_{{item.테이블B}}</td>
           <td class="table-btn" @click="makeCsv">다운로드</td>
         </tr>
       </table>
     </div>
+    <button class="send-btn" @click="makeCsvRes" v-if="this.$store.state.joinSingle && this.show">단일 결합 결과 다운로드</button>
   </div>  
 </template>
 
@@ -66,14 +67,23 @@ export default {
     },
 
     async getSingleResult(){
-      const response = await axios.get('/get/singleresult')
-      this.joinResult = response.data
-      console.log(response.data)
-      this.$store.state.joinSingle = true
-      this.show = true
+      setTimeout(async ()=>{
+        const response = await axios.get('/get/singleresult')
+        this.joinResult = response.data
+        console.log(response.data)
+        this.$store.state.joinSingle = true
+        this.show = true
+      },3000)
     },
     async makeCsv(){
       var fileCsv = "single_"+this.source+"_"+this.target
+      const response = await axios.get(`/download/${fileCsv}`)
+      if(response){
+        alert('다운로드 성공')
+      }
+    },
+    async makeCsvRes(){
+      var fileCsv = "single_join_result"
       const response = await axios.get(`/download/${fileCsv}`)
       if(response){
         alert('다운로드 성공')
